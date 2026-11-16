@@ -7,25 +7,14 @@
     <meta name="theme-color" content="#0f766e">
     <meta name="unity-rtc-config" content="">
     <title>Unity — медицинская платформа Казахстана</title>
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="ru_KZ">
-    <meta property="og:title" content="Unity — медицинская платформа Казахстана">
-    <meta property="og:description" content="Каталог клиник и больниц Казахстана, поиск врачей, карта и медицинские сервисы.">
-    <meta name="twitter:card" content="summary">
-    <meta name="color-scheme" content="light dark">
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cpath d='M26 14h12v12h12v12H38v12H26V38H14V26h12z' fill='%23fff'/%3E%3C/svg%3E">
-    <script>
-    window.unityEsc=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})};
-    window.unityToast=function(msg){var t=document.getElementById('unity-toast');if(!t){t=document.createElement('div');t.id='unity-toast';t.setAttribute('role','status');t.setAttribute('aria-live','polite');document.body.appendChild(t)}t.textContent=msg;t.className='show';clearTimeout(t._h);t._h=setTimeout(function(){t.className=''},4200)};
-    </script>
     <!-- Подключение Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <!-- Подключение Google Fonts (Inter) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Подключение иконок Lucide -->
-    <script src="https://unpkg.com/lucide@0.441.0"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
 
       .unity-vector-map{position:relative;width:100%;height:430px;background:#edf5f7;border-radius:16px;overflow:hidden}
@@ -118,6 +107,7 @@ html[data-theme="dark"] #unity-mobile-dock a{color:#b5c4d5}
 @media(max-width:767px){#unity-global-controls{display:none!important}}
 </style>
 
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
 #unity-map{height:520px!important;min-height:380px;background:#e8f1f3;position:relative;border:1px solid #d9e2e8;border-radius:18px;overflow:hidden}
@@ -147,6 +137,48 @@ html[data-theme="dark"] #unity-mobile-dock a{color:#b5c4d5}
 @media(max-width:640px){#unity-map{height:430px!important;min-height:340px}}
 </style>
 
+
+<style id="unity-osiris-map-style">
+#unity-map-card{padding:0!important;overflow:hidden;background:#071321!important;border:1px solid #183b56!important;color:#e8f6ff!important;border-radius:24px!important;box-shadow:0 20px 60px rgba(2,12,25,.22)!important}
+#unity-map-card .unity-osiris-head{padding:22px 22px 14px;background:linear-gradient(120deg,#081726,#102a43 65%,#0a3446)}
+#unity-map-card .unity-osiris-kicker{font-size:10px;letter-spacing:.2em;color:#5acbff;font-weight:800}
+#unity-map-card .unity-osiris-title{font-size:25px;font-weight:850;letter-spacing:-.04em;color:#f2faff;margin-top:5px}
+#unity-map-card .unity-osiris-sub{font-size:12px;color:#9bb7ca;margin-top:5px;line-height:1.5}
+.unity-osiris-layout{display:grid;grid-template-columns:minmax(220px,290px) minmax(0,1fr);min-height:590px;background:#071321}
+.unity-osiris-sidebar{padding:15px;background:linear-gradient(180deg,#0b1b2c,#081522);border-right:1px solid #1a3851;display:flex;flex-direction:column;gap:11px;min-width:0}
+.unity-osiris-search{width:100%;background:#10243a!important;border:1px solid #244863!important;color:#effaff!important;border-radius:11px!important;padding:12px!important;font-size:13px}
+.unity-osiris-search::placeholder{color:#7896ad}
+.unity-osiris-btn{background:#102a43;border:1px solid #28516e;color:#d9f3ff;border-radius:9px;padding:9px 11px;font-size:11px;font-weight:750;cursor:pointer}
+.unity-osiris-btn:hover,.unity-osiris-btn.active{background:#087eb5;border-color:#42c7ff;color:white}
+.unity-osiris-btn.primary{background:#087da9;border-color:#27baff;color:white}
+.unity-osiris-filters{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.unity-osiris-filter{display:flex;align-items:center;gap:7px;padding:9px;border:1px solid #1c3a52;background:#0d2032;border-radius:9px;color:#c5dbea;font-size:11px}
+.unity-osiris-filter input{accent-color:#26baff}
+#unity-map-results{max-height:245px;overflow:auto;display:grid;gap:7px}
+#unity-map-results .unity-map-result{background:#10243a!important;border:1px solid #1e405b!important;color:#e5f5ff!important;border-radius:9px!important;padding:10px!important;text-align:left}
+#unity-map-results .unity-map-result small{color:#8eacc2!important}
+.unity-osiris-mapstage{position:relative;min-width:0;min-height:590px;background:#081523}
+#unity-map{height:590px!important;min-height:590px!important;width:100%;border:0!important;border-radius:0!important;box-shadow:none!important;background:#081523}
+.unity-osiris-maptools{position:absolute;z-index:8;top:12px;left:12px;right:12px;display:flex;gap:7px;flex-wrap:wrap;pointer-events:none}
+.unity-osiris-maptools button{pointer-events:auto;background:#091a2beF;border:1px solid #27516c;color:#d9f4ff;border-radius:9px;padding:8px 10px;font-size:11px;font-weight:750;box-shadow:0 5px 20px #0005}
+.unity-osiris-maptools button.active{background:#087eb5;border-color:#44c9ff}
+.unity-osiris-mapstatus{position:absolute;z-index:8;left:12px;bottom:14px;max-width:calc(100% - 24px);background:#071827ed;border:1px solid #244a64;color:#9edfff;border-radius:9px;padding:8px 11px;font-size:10px;backdrop-filter:blur(10px)}
+.unity-osiris-detail{display:none;padding:12px;border:1px solid #24506b;background:#10243a;border-radius:10px;color:#dcefff;font-size:12px;line-height:1.55}
+.unity-osiris-detail strong{color:#65d2ff}
+.unity-osiris-count{font-size:11px;color:#82a8c2;padding:3px 1px}
+.unity-osiris-legend{display:flex;gap:10px;flex-wrap:wrap;color:#9bb7ca;font-size:10px}
+.unity-osiris-legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+.unity-osiris-pin{width:29px;height:29px;border-radius:50%;display:grid;place-items:center;border:2px solid #e9f8ff;box-shadow:0 0 15px currentColor;font-size:14px;cursor:pointer}
+.unity-osiris-pin.hospital{background:#087fc2;color:#4bc7ff}.unity-osiris-pin.clinic{background:#008c7a;color:#42e4c0}.unity-osiris-pin.pharmacy{background:#7544b8;color:#c69aff}
+.unity-osiris-pin.user{background:#d28a19;color:#ffd16a}
+#unity-map-card .maplibregl-ctrl-group{background:#0b1b2c;border:1px solid #294d67;box-shadow:0 4px 15px #0005}
+#unity-map-card .maplibregl-ctrl-group button{filter:invert(1)}
+#unity-map-card .maplibregl-ctrl-attrib{background:#071827d9;color:#a8c6d9;font-size:9px}
+#unity-map-card .maplibregl-popup-content{background:#10243a;color:#effaff;border:1px solid #2b678a;border-radius:10px;padding:12px;box-shadow:0 10px 30px #0007}
+#unity-map-card .maplibregl-popup-close-button{color:white;font-size:18px}
+#unity-map-card .maplibregl-popup-tip{border-top-color:#10243a;border-bottom-color:#10243a}
+@media(max-width:760px){.unity-osiris-layout{grid-template-columns:1fr;min-height:0}.unity-osiris-sidebar{border-right:0;border-bottom:1px solid #1a3851}.unity-osiris-mapstage{min-height:470px}#unity-map{height:470px!important;min-height:470px!important}.unity-osiris-maptools{top:8px;left:8px;right:8px}.unity-osiris-maptools button{padding:7px 8px;font-size:10px}.unity-osiris-head{padding:17px!important}.unity-osiris-title{font-size:21px!important}#unity-map-results{max-height:150px}}
+</style>
 <style id="unity-multipage-navigation">
 #unity-screen-nav{position:sticky;top:80px;z-index:35;display:flex;gap:8px;overflow-x:auto;padding:10px max(16px,calc((100vw - 1280px)/2));background:rgba(255,255,255,.96);border-bottom:1px solid #dce9ed;backdrop-filter:blur(14px);scrollbar-width:thin}
 .unity-screen-btn{flex:0 0 auto;border:1px solid #dce9ed;background:#fff;color:#35536a;border-radius:12px;padding:10px 14px;font-size:13px;font-weight:750;white-space:nowrap}
@@ -347,252 +379,42 @@ input:focus,select:focus,textarea:focus{box-shadow:0 0 0 4px var(--unity-glow)!i
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 </style>
 
-<style id="unity-polish">
-:focus-visible{outline:3px solid #f59e0b;outline-offset:2px;border-radius:6px}
-.unity-skip{position:fixed;left:12px;top:-60px;z-index:100;background:#0f766e;color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;transition:top .15s}
-.unity-skip:focus{top:12px}
-#unity-toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,20px);max-width:min(92vw,420px);background:#102a43;color:#fff;padding:12px 18px;border-radius:14px;font-size:14px;font-weight:600;box-shadow:0 12px 32px rgba(16,42,67,.3);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:120}
-#unity-toast.show{opacity:1;transform:translate(-50%,0)}
-.unity-noscript{padding:14px;background:#fef3c7;color:#78350f;text-align:center;font-weight:600}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+<style id="unity-medical-map-upgrade">
+.unity-map-analytics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.unity-map-analytics>div{background:#10243a;border:1px solid #1e405b;border-radius:10px;padding:9px;min-width:0}
+.unity-map-analytics b{display:block;color:#f2faff;font-size:18px;font-weight:850}
+.unity-map-analytics span{display:block;color:#8eacc2;font-size:10px;line-height:1.35;margin-top:2px}
+.unity-osiris-pin.vet{background:#a66a16;color:#ffd58b}
+.unity-osiris-pin.dentist{background:#087da9;color:#8ce4ff}
+.unity-osiris-pin.lab{background:#7550a8;color:#d9b8ff}
+.unity-map-result-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px;color:#8eacc2;font-size:10px}
+.unity-map-result-meta span{border:1px solid #294d67;border-radius:999px;padding:2px 6px}
+.unity-osiris-filter{cursor:pointer}
+#unity-map-card .unity-osiris-sidebar{max-height:none}
+#unity-map-results{max-height:320px}
+@media(max-width:760px){.unity-map-analytics{grid-template-columns:repeat(4,minmax(0,1fr))}.unity-map-analytics>div{padding:7px}.unity-map-analytics b{font-size:15px}.unity-map-analytics span{font-size:9px}}
 </style>
-<style id="unity-redesign">
-:root{--u-teal:#0f766e;--u-teal-d:#115e59;--u-ink:#102a43;--u-amber:#f59e0b;--u-r:16px}
-.u-grad{color:var(--u-teal)}
-h1,h2{color:var(--u-ink)!important}
-body{font-size:16px;line-height:1.6}
-#home-screen{background:linear-gradient(180deg,#e8f6f4 0%,#f5fafb 100%)!important}
-#home-screen .blur-3xl{display:none}
-/* единый акцент: все teal/sky/kz-кнопки в одном тоне */
-.bg-teal-600,.bg-teal-700,.bg-sky-600{background-color:var(--u-teal)!important}
-.hover\:bg-teal-700:hover,.hover\:bg-teal-800:hover{background-color:var(--u-teal-d)!important}
-.text-sky-600,.text-teal-600{color:var(--u-teal)!important}
-/* быстрые действия */
-.u-quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
-.u-quick a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 8px;border-radius:var(--u-r);background:#fff;border:1px solid var(--unity-line,#dce9ed);color:var(--u-ink);text-align:center;transition:transform .15s,box-shadow .15s,border-color .15s}
-.u-quick a:hover{transform:translateY(-2px);border-color:var(--u-teal);box-shadow:0 8px 20px rgba(15,118,110,.14)}
-.u-quick a i,.u-quick a svg{width:26px;height:26px;color:var(--u-teal);margin-bottom:4px}
-.u-quick a b{font-size:15px}.u-quick a span{font-size:12px;color:#557080}
-.u-quick a.primary{background:var(--u-teal);border-color:var(--u-teal)}
-.u-quick a.primary *{color:#fff!important}
-@media(max-width:520px){.u-quick{grid-template-columns:repeat(2,1fr)}}
-/* карточки: единый радиус, мягкая тень, понятный hover */
-article{border-radius:var(--u-r)!important;border:1px solid var(--unity-line,#dce9ed)!important;transition:box-shadow .2s,transform .2s}
-article:hover{box-shadow:0 14px 34px rgba(16,42,67,.11);transform:translateY(-2px)}
-/* демо-функции: плашка «Демо» */
-#calls-section>div:first-child::before,#chat-screen>div:first-child::before,#patient-route>div:first-child::before{content:"Демо-режим";display:inline-block;margin-bottom:8px;padding:3px 10px;border-radius:99px;background:#fef3c7;color:#92400e;font-size:12px;font-weight:700}
-/* скелетон для пустых блоков */
-.u-skel{background:linear-gradient(90deg,#eaf2f4 25%,#f6fafb 50%,#eaf2f4 75%);background-size:200% 100%;animation:uskel 1.2s infinite;border-radius:12px;min-height:120px}
-@keyframes uskel{to{background-position:-200% 0}}
+
+<style id="unity-map-fullscreen-style">
+/* Unity map fullscreen mode: native fullscreen when available, fixed-screen fallback on mobile browsers */
+#unity-map-card .unity-osiris-mapstage.unity-map-fullscreen{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;min-height:100dvh!important;z-index:99999!important;border-radius:0!important;background:#071523!important}
+#unity-map-card .unity-osiris-mapstage.unity-map-fullscreen #unity-map{height:100dvh!important;min-height:100dvh!important;width:100%!important;border-radius:0!important}
+#unity-map-card .unity-osiris-mapstage.unity-map-fullscreen .unity-osiris-maptools{top:max(10px,env(safe-area-inset-top));left:10px;right:10px}
+#unity-map-card .unity-osiris-mapstage.unity-map-fullscreen .unity-osiris-mapstatus{bottom:max(12px,env(safe-area-inset-bottom))}
+body.unity-map-lock{overflow:hidden!important}
+@media(max-width:760px){#unity-map-card .unity-osiris-mapstage.unity-map-fullscreen .unity-osiris-maptools{gap:5px}#unity-map-card .unity-osiris-mapstage.unity-map-fullscreen .unity-osiris-maptools button{font-size:10px;padding:7px 8px}}
 </style>
-<style id="unity-card">
-.u-card{display:flex;flex-direction:column;background:#fff;padding:20px;gap:10px}
-.u-card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.u-rate{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;background:#fffbeb;padding:4px 10px;border-radius:10px;color:#102a43}
-.u-card-title{font-size:19px;font-weight:700;line-height:1.3;color:#102a43}
-.u-card-city{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#0f766e}
-.u-card-desc{font-size:14px;color:#475569;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.u-card-tags{display:flex;flex-wrap:wrap;gap:6px}
-.u-card-tags span{font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;background:#f1f5f9;color:#475569}
-.u-card-tags .ok{background:#ecfdf5;color:#047857}.u-card-tags .hot{background:#fff1f2;color:#be123c}
-.u-card-more{font-size:13px;color:#475569;border-top:1px solid #e8f0f2;padding-top:10px;margin-top:auto}
-.u-card-more summary{cursor:pointer;font-weight:600;color:#334155;list-style:none}
-.u-card-more summary::after{content:" ▾"}.u-card-more[open] summary::after{content:" ▴"}
-.u-card-more div{display:flex;align-items:center;gap:8px;margin-top:8px}
-.u-card-more a{font-weight:600;color:#0f766e}
-.u-card-actions{display:flex;gap:8px}
-.u-btn-main{flex:1;padding:11px;border-radius:12px;background:#0f766e;color:#fff;font-weight:700;font-size:14px}
-.u-btn-main:hover{background:#115e59}
-.u-btn-ghost{padding:11px 14px;border-radius:12px;border:1px solid #cfe0e4;color:#334155;font-weight:600;font-size:14px}
-.u-btn-ghost:hover{background:#f1f8f9}
-.u-btn-fav{width:44px;border-radius:12px;border:1px solid #fde68a;background:#fffbeb;color:#b45309;font-size:18px}
+
+<style id="unity-map-quality-tuning">
+#unity-map .maplibregl-canvas{outline:none;image-rendering:auto}
+#unity-map .maplibregl-canvas-container{background:#0b1724}
+#unity-map .maplibregl-ctrl-attrib{max-width:75%;font-size:10px}
+@media(max-width:760px){#unity-map{touch-action:pan-x pan-y}#unity-map .maplibregl-ctrl-attrib{font-size:9px}}
 </style>
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%20%22Unity%20%E2%80%94%20%D0%BC%D0%B5%D0%B4%D0%B8%D1%86%D0%B8%D0%BD%D1%81%D0%BA%D0%B0%D1%8F%20%D0%BF%D0%BB%D0%B0%D1%82%D1%84%D0%BE%D1%80%D0%BC%D0%B0%20%D0%9A%D0%B0%D0%B7%D0%B0%D1%85%D1%81%D1%82%D0%B0%D0%BD%D0%B0%22%2C%20%22short_name%22%3A%20%22Unity%22%2C%20%22lang%22%3A%20%22ru%22%2C%20%22display%22%3A%20%22standalone%22%2C%20%22background_color%22%3A%20%22%23f5fafb%22%2C%20%22theme_color%22%3A%20%22%230f766e%22%2C%20%22start_url%22%3A%20%22.%22%2C%20%22icons%22%3A%20%5B%7B%22src%22%3A%20%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20viewBox%3D%270%200%2064%2064%27%253E%253Crect%20width%3D%2764%27%20height%3D%2764%27%20rx%3D%2714%27%20fill%3D%27%25230f766e%27%2F%253E%253Cpath%20d%3D%27M26%2014h12v12h12v12H38v12H26V38H14V26h12z%27%20fill%3D%27%2523fff%27%2F%253E%253C%2Fsvg%253E%22%2C%20%22sizes%22%3A%20%22any%22%2C%20%22type%22%3A%20%22image%2Fsvg%2Bxml%22%7D%5D%7D">
-<link rel="preconnect" href="https://unpkg.com" crossorigin>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Unity", "inLanguage": "ru-KZ", "description": "Каталог клиник и больниц Казахстана, поиск врачей и запись на приём."}</script>
-<style id="unity-final">
-/* контраст и тач-зоны */
-.text-slate-400{color:#64748b!important}.text-slate-500{color:#556678!important}
-button,.u-btn-main,[role=button],select,input{min-height:44px}
-.cat-filter-btn,.u-card-tags span{min-height:0}
-img,svg{max-width:100%}
-@media(max-width:767px){
- header .max-w-7xl{padding-top:6px;padding-bottom:6px}
- h2{font-size:1.6rem!important;line-height:1.25}
- #clinics-grid{gap:14px!important}
- .u-card{padding:16px}
-}
-@media print{header,#unity-mobile-dock,#unity-back-top,#unity-toast{display:none!important}body{background:#fff!important}}
-</style>
-<script>
-/* клавиатурная доступность: элементы с onclick, не являющиеся кнопками */
-document.addEventListener('DOMContentLoaded',function(){
- function fix(root){(root||document).querySelectorAll('[onclick]:not(button):not(a):not(input):not(select):not([role])').forEach(function(el){el.setAttribute('role','button');if(!el.hasAttribute('tabindex'))el.tabIndex=0})}
- fix();
- var _q=0;new MutationObserver(function(){if(_q)return;_q=requestAnimationFrame(function(){_q=0;fix()})}).observe(document.body,{childList:true,subtree:true});
- document.addEventListener('keydown',function(e){var t=e.target;if((e.key==='Enter'||e.key===' ')&&t.getAttribute&&t.getAttribute('role')==='button'&&t.tagName!=='BUTTON'){e.preventDefault();t.click()}});
- /* состояние сети */
- window.addEventListener('offline',function(){unityToast('Нет соединения. Часть функций (карта, звонки) недоступна.')});
- window.addEventListener('online',function(){unityToast('Соединение восстановлено')});
- /* Esc закрывает открытые модальные окна */
- document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;var m=document.querySelector('[id$="-modal"]:not(.hidden)');if(m){var b=m.querySelector('[onclick*="closeModal"],[aria-label*="акрыть"]');if(b)b.click()}});
-});
-</script>
-<style id="unity-map-pro">
-#unity-map-card{display:block}
-#unity-map{height:460px!important}
-.u-map-full-btn{margin-top:12px;padding:9px 14px;border-radius:12px;border:1px solid #cfe0e4;background:#fff;color:#0f766e;font-weight:700;font-size:13px}
-.u-map-full-btn:hover{background:#effcf9}
-body.u-map-open{overflow:hidden}
-#unity-map-card.u-map-full{position:fixed;inset:0;z-index:90;margin:0;border-radius:0!important;overflow:auto;padding:14px 14px 90px;max-width:none;transform:none!important}
-#unity-map-card.u-map-full #unity-map{height:62vh!important;min-height:300px;border-radius:14px}
-#unity-map-card.u-map-full .unity-map-results{max-height:none}
-@media(max-width:640px){#unity-map{height:380px!important}}
-</style>
-<script>
-window.unityMapFullscreen=function(force){
- var c=document.getElementById('unity-map-card'),b=document.getElementById('u-map-full-btn');if(!c)return;
- var on=typeof force==='boolean'?force:!c.classList.contains('u-map-full');
- c.classList.toggle('u-map-full',on);document.body.classList.toggle('u-map-open',on);
- if(b){b.textContent=on?'✕ Свернуть карту':'⛶ На весь экран';b.setAttribute('aria-pressed',on)}
- if(on)c.scrollTop=0;
- [60,250,500].forEach(function(t){setTimeout(function(){window.dispatchEvent(new Event('resize'))},t)});
-};
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&document.getElementById('unity-map-card')?.classList.contains('u-map-full'))unityMapFullscreen(false)});
-</script>
-<style id="um-css">
-.um-card{background:#fff;border:1px solid #dce9ed;border-radius:18px;padding:18px;box-shadow:0 8px 26px rgba(16,42,67,.06)}
-.um-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.um-head h3{font-size:20px;font-weight:800;color:#102a43}.um-head p{font-size:13px;color:#556678;max-width:560px;margin-top:4px}
-.um-head-btns{display:flex;gap:8px;flex-wrap:wrap;align-self:flex-start}
-.um-head-btns button,.um-chips button{padding:9px 13px;border-radius:12px;border:1px solid #cfe0e4;background:#fff;font-weight:700;font-size:13px;color:#0f766e}
-.um-chips{display:flex;gap:6px}.um-chips button.on{background:#0f766e;color:#fff;border-color:#0f766e}
-.um-tools{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin:14px 0}
-.um-tools input,.um-tools select{border:1px solid #cfe0e4;border-radius:12px;padding:10px 12px;font-size:14px;min-width:0;background:#fff}
-.um-body{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:14px}
-.um-stage{position:relative;background:linear-gradient(#e6f3f6,#f2f8f6);border-radius:16px;overflow:hidden;border:1px solid #dce9ed;touch-action:none}
-#um-svg{display:block;width:100%;height:auto;cursor:grab;outline-offset:-3px}#um-svg:active{cursor:grabbing}
-#um-border{fill:#fff;stroke:#7fb7b0;stroke-width:2;stroke-linejoin:round;filter:drop-shadow(0 4px 8px rgba(15,118,110,.18))}
-.um-pin{cursor:pointer;outline:none}.um-pin circle{fill:#0f766e;fill-opacity:.88;stroke:#fff;stroke-width:3;transition:fill .15s}
-.um-pin:hover circle,.um-pin:focus circle{fill:#115e59}.um-pin.sel circle{fill:#f59e0b;stroke:#102a43}
-.um-pin text{font:800 13px system-ui,sans-serif;fill:#fff;text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.um-pin .lbl{font:700 14px system-ui,sans-serif;fill:#102a43;paint-order:stroke;stroke:#fff;stroke-width:4px;text-anchor:start;dominant-baseline:auto}
-.um-zoom{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
-.um-zoom button{width:40px;height:40px;border-radius:12px;background:#fff;border:1px solid #cfe0e4;font-size:20px;font-weight:800;color:#0f766e;box-shadow:0 3px 10px rgba(0,0,0,.12)}
-.um-note{position:absolute;left:10px;bottom:8px;font-size:11px;color:#557080;background:#ffffffcc;padding:3px 8px;border-radius:8px}
-.um-panel{display:flex;flex-direction:column;min-height:0;max-height:520px}
-.um-sum{font-size:14px;font-weight:700;color:#102a43;padding:2px 2px 8px}.um-sum small{display:block;font-weight:500;color:#556678;margin-top:2px}
-.um-list{overflow:auto;display:grid;gap:8px;align-content:start}
-.um-item{border:1px solid #dce9ed;border-radius:12px;padding:10px 12px;background:#fff}
-.um-item b{display:block;font-size:14px;color:#102a43;line-height:1.3}.um-item span{font-size:12px;color:#556678}
-.um-item div{display:flex;gap:6px;margin-top:8px}
-.um-item button{flex:1;padding:8px;border-radius:10px;font-size:13px;font-weight:700;border:1px solid #cfe0e4;color:#334155;background:#fff}
-.um-item button.m{background:#0f766e;color:#fff;border-color:#0f766e}
-.um-empty{padding:18px;text-align:center;color:#556678;font-size:14px;border:1px dashed #cfe0e4;border-radius:12px}
-#unity-own-map.um-full{position:fixed;inset:0;z-index:95;border-radius:0;overflow:auto;padding:14px 14px 90px}
-#unity-own-map.um-full .um-panel{max-height:none}
-@media(max-width:820px){.um-body{grid-template-columns:1fr}.um-tools{grid-template-columns:1fr 1fr}.um-tools input{grid-column:1/-1}.um-chips{grid-column:1/-1}.um-panel{max-height:none}}
-[data-theme="dark"] .um-card,[data-theme="dark"] .um-item,[data-theme="dark"] .um-tools input,[data-theme="dark"] .um-tools select{background:#14232e;color:#e6f1f3;border-color:#264355}
-[data-theme="dark"] .um-head h3,[data-theme="dark"] .um-item b,[data-theme="dark"] .um-sum{color:#e6f1f3}
-[data-theme="dark"] .um-stage{background:#0f1d27}[data-theme="dark"] #um-border{fill:#1b3340}
-[data-theme="dark"] .um-pin .lbl{fill:#e6f1f3;stroke:#0f1d27}
-</style>
-<script>
-(function(){
-var C={'Астана':[71.45,51.17],'Алматы':[76.95,43.24],'Шымкент':[69.6,42.3],'Караганда':[73.1,49.8],'Актобе':[57.2,50.3],'Атырау':[51.9,47.1],'Актау':[51.2,43.65],'Усть-Каменогорск':[82.6,49.95],'Павлодар':[76.95,52.3],'Костанай':[63.6,53.2],'Уральск':[51.4,51.2],'Тараз':[71.4,42.9],'Кызылорда':[65.5,44.85],'Туркестан':[68.25,43.3],'Петропавловск':[69.15,54.87],'Кокшетау':[69.4,53.3],'Семей':[80.25,50.4],'Талдыкорган':[78.4,45.0],'Жезказган':[67.7,47.8],'Конаев':[77.07,43.85],'Степногорск':[71.9,52.35],'Атбасар':[68.3,51.8]};
-var B=[[46.5,48.4],[47.5,50.0],[48.6,50.6],[50.6,51.6],[54,51.1],[55.7,50.6],[57,51.1],[60,50.8],[61.4,50.8],[61.6,52],[60,52.9],[61,53.8],[65,54.6],[69,55.3],[70.8,55.3],[73.5,54],[76.8,54.1],[79.8,53],[81,51.3],[83,51],[85.2,49.6],[86.8,49],[85,47],[83,47.2],[82.2,45.5],[80,45],[80.5,42.9],[80.2,42.2],[77,43],[75,42.9],[73.5,42.5],[70.9,42.3],[70.5,41.2],[69,41.3],[67.9,41.2],[66.7,42],[66,42],[61,44.2],[58.5,45.5],[56,45],[55.9,41.3],[54.8,41.9],[53,42.1],[52.5,42.8],[51.3,43.2],[50.3,44.5],[50,45.3],[51,46.9],[49.5,46.4],[48,46.6],[46.8,47.4]];
-function P(c){return[(c[0]-46)*23.8,(55.8-c[1])*35.6]}
-var st={q:'',cat:'all',tag:'all',sel:null,k:1,x:0,y:0};
-function $(i){return document.getElementById(i)}
-function init(){
- var svg=$('um-svg');if(!svg||typeof clinicsData==='undefined')return;
- $('um-border').setAttribute('d','M'+B.map(function(b){var p=P(b);return p[0].toFixed(1)+' '+p[1].toFixed(1)}).join('L')+'Z');
- var cats=[];clinicsData.forEach(function(c){if(cats.indexOf(c.category)<0)cats.push(c.category)});
- $('um-cat').innerHTML+=cats.map(function(c){return '<option>'+unityEsc(c)+'</option>'}).join('');
- $('um-q').addEventListener('input',function(e){st.q=e.target.value.trim().toLowerCase();draw()});
- $('um-cat').addEventListener('change',function(e){st.cat=e.target.value;draw()});
- document.querySelectorAll('.um-chips button').forEach(function(b){b.addEventListener('click',function(){st.tag=b.dataset.tag;document.querySelectorAll('.um-chips button').forEach(function(x){x.classList.toggle('on',x===b)});draw()})});
- document.querySelectorAll('.um-zoom button').forEach(function(b){b.addEventListener('click',function(){var z=+b.dataset.z;if(!z){st.k=1;st.x=0;st.y=0}else zoom(z>0?1.5:1/1.5,500,270);apply()})});
- $('um-full').addEventListener('click',function(){var c=$('unity-own-map'),on=!c.classList.contains('um-full');c.classList.toggle('um-full',on);document.body.classList.toggle('u-map-open',on);this.textContent=on?'✕ Свернуть':'⛶ На весь экран'});
- document.addEventListener('keydown',function(e){if(e.key==='Escape'&&$('unity-own-map').classList.contains('um-full'))$('um-full').click()});
- $('um-near').addEventListener('click',near);
- /* жесты: перетаскивание, колесо, щипок */
- var ptr={},d0=0,moved=false;
- svg.addEventListener('pointerdown',function(e){ptr[e.pointerId]=[e.clientX,e.clientY];moved=false;d0=0});
- svg.addEventListener('pointermove',function(e){var p=ptr[e.pointerId];if(!p)return;var ids=Object.keys(ptr),r=svg.getBoundingClientRect(),f=1000/r.width;
-  if(ids.length===1){var dx=(e.clientX-p[0])*f,dy=(e.clientY-p[1])*f;if(Math.abs(dx)+Math.abs(dy)>1){moved=true;st.x+=dx;st.y+=dy;ptr[e.pointerId]=[e.clientX,e.clientY];apply()}}
-  else if(ids.length===2){ptr[e.pointerId]=[e.clientX,e.clientY];var a=ptr[ids[0]],b=ptr[ids[1]],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(d0)zoom(d/d0,((a[0]+b[0])/2-r.left)*f,((a[1]+b[1])/2-r.top)*f);d0=d;moved=true;apply()}});
- function up(e){delete ptr[e.pointerId];d0=0}
- svg.addEventListener('pointerup',up);svg.addEventListener('pointercancel',up);
- svg.addEventListener('wheel',function(e){e.preventDefault();var r=svg.getBoundingClientRect(),f=1000/r.width;zoom(e.deltaY<0?1.2:1/1.2,(e.clientX-r.left)*f,(e.clientY-r.top)*f);apply()},{passive:false});
- svg.addEventListener('click',function(e){if(moved)e.stopPropagation()},true);
- svg.addEventListener('keydown',function(e){var s=40;if(e.key==='ArrowLeft')st.x+=s;else if(e.key==='ArrowRight')st.x-=s;else if(e.key==='ArrowUp')st.y+=s;else if(e.key==='ArrowDown')st.y-=s;else if(e.key==='+'||e.key==='=')zoom(1.3,500,270);else if(e.key==='-')zoom(1/1.3,500,270);else return;e.preventDefault();apply()});
- draw();
-}
-function zoom(f,cx,cy){var k=Math.max(1,Math.min(8,st.k*f));f=k/st.k;st.x=cx-(cx-st.x)*f;st.y=cy-(cy-st.y)*f;st.k=k;if(k===1){st.x=0;st.y=0}}
-function apply(){var m=1000*(st.k-1),n=540*(st.k-1);st.x=Math.min(0,Math.max(-m,st.x));st.y=Math.min(0,Math.max(-n,st.y));$('um-g').setAttribute('transform','translate('+st.x.toFixed(1)+' '+st.y.toFixed(1)+') scale('+st.k.toFixed(3)+')');
- document.querySelectorAll('#um-pins .um-pin').forEach(function(g){var l=g.querySelector('.lbl');if(l)l.style.display=(st.k>1.5||+g.dataset.n>25)?'':'none';g.querySelector('circle').setAttribute('stroke-width',3/Math.sqrt(st.k))})}
-function items(){return clinicsData.filter(function(c){
- if(st.cat!=='all'&&c.category!==st.cat)return false;
- if(st.tag!=='all'&&(c.tags||[]).indexOf(st.tag)<0)return false;
- if(st.q){var h=[c.name,c.category,(c.cities||[]).join(' '),(c.tags||[]).join(' ')].join(' ').toLowerCase();if(h.indexOf(st.q)<0)return false}
- return true})}
-function byCity(list){var m={};list.forEach(function(c){(c.cities||[]).forEach(function(n){if(C[n])(m[n]=m[n]||[]).push(c)})});return m}
-function draw(){
- var m=byCity(items()),g=$('um-pins'),h='';
- Object.keys(m).forEach(function(n){var p=P(C[n]),k=m[n].length,r=11+Math.min(22,Math.sqrt(k)*3.2);
-  h+='<g class="um-pin'+(st.sel===n?' sel':'')+'" data-c="'+unityEsc(n)+'" data-n="'+k+'" tabindex="0" role="button" aria-label="'+unityEsc(n)+': '+k+' учреждений"><circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="'+r.toFixed(1)+'"/><text x="'+p[0].toFixed(1)+'" y="'+p[1].toFixed(1)+'">'+k+'</text><text class="lbl" x="'+(p[0]+r+5).toFixed(1)+'" y="'+(p[1]+5).toFixed(1)+'">'+unityEsc(n)+'</text></g>'});
- g.innerHTML=h;
- g.querySelectorAll('.um-pin').forEach(function(el){var f=function(){st.sel=el.dataset.c;draw()};el.addEventListener('click',f);el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();e.stopPropagation();f()}})});
- if(st.sel&&!m[st.sel])st.sel=null;
- list(m);apply();
-}
-function list(m){
- var sum=$('um-sum'),box=$('um-list'),cities=Object.keys(m);
- if(!cities.length){sum.innerHTML='Ничего не найдено';box.innerHTML='<div class="um-empty">Измените запрос или сбросьте фильтры.</div>';return}
- var arr=st.sel?m[st.sel]:null;
- if(!arr){var tot=0;cities.forEach(function(n){tot+=m[n].length});sum.innerHTML='Городов: '+cities.length+'<small>Выберите город на карте или в списке ниже (всего связей учреждение-город: '+tot+')</small>';
-  box.innerHTML=cities.sort(function(a,b){return m[b].length-m[a].length}).map(function(n){return '<div class="um-item"><b>'+unityEsc(n)+'</b><span>'+m[n].length+' учреждений</span><div><button type="button" class="m" data-pick="'+unityEsc(n)+'">Показать</button></div></div>'}).join('')}
- else{sum.innerHTML=unityEsc(st.sel)+': '+arr.length+'<small><a href="#" id="um-back" style="color:#0f766e;font-weight:700">← Все города</a></small>';
-  box.innerHTML=arr.slice(0,40).map(function(c){return '<div class="um-item"><b>'+unityEsc(c.name)+'</b><span>'+unityEsc(c.category)+(c.rating&&c.rating!=='—'?' · ★ '+unityEsc(c.rating):'')+'</span>'+unityRouteLinks(c,st.sel)+'<div><button type="button" class="m" data-ap="'+unityEsc(c.id)+'">Записаться</button><button type="button" data-dt="'+unityEsc(c.id)+'">Подробнее</button></div></div>'}).join('')+(arr.length>40?'<div class="um-empty">Показано 40 из '+arr.length+'. Уточните поиск.</div>':'')}
- box.querySelectorAll('[data-pick]').forEach(function(b){b.onclick=function(){st.sel=b.dataset.pick;focusCity(st.sel);draw()}});
- box.querySelectorAll('[data-ap]').forEach(function(b){b.onclick=function(){openAppointmentModal(b.dataset.ap)}});
- box.querySelectorAll('[data-dt]').forEach(function(b){b.onclick=function(){openClinicDetailModal(b.dataset.dt)}});
- var bk=$('um-back');if(bk)bk.onclick=function(e){e.preventDefault();st.sel=null;st.k=1;st.x=0;st.y=0;draw()}
-}
-function focusCity(n){var p=P(C[n]);st.k=3;st.x=500-p[0]*3;st.y=270-p[1]*3}
-function near(){if(!navigator.geolocation){unityToast('Геолокация недоступна в этом браузере');return}
- navigator.geolocation.getCurrentPosition(function(pos){var m=byCity(items()),best=null,bd=1e9;Object.keys(m).forEach(function(n){var d=Math.hypot((C[n][0]-pos.coords.longitude)*0.67,C[n][1]-pos.coords.latitude);if(d<bd){bd=d;best=n}});
-  if(!best){unityToast('Нет учреждений по текущим фильтрам');return}
-  st.sel=best;focusCity(best);draw();unityToast('Ближайший город из каталога: '+best)},function(){unityToast('Не удалось определить местоположение')},{timeout:8000})}
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
-if(location.hash==='#unity-own-map')setTimeout(function(){var e=$('unity-own-map');e&&e.scrollIntoView()},300);
-})();
-</script>
-<style id="um-nav-css">
-.um-route{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-.um-route a{flex:1 1 auto;text-align:center;padding:8px 10px;border-radius:10px;border:1px solid #cfe0e4;background:#f4fafb;color:#0f766e;font-size:12.5px;font-weight:700;text-decoration:none;min-height:36px;display:inline-flex;align-items:center;justify-content:center}
-.um-route a:hover{background:#e3f4f2}.um-route a.t{background:#0f766e;color:#fff;border-color:#0f766e}
-.um-addr{font-size:12.5px;color:#334155;margin-top:6px;display:flex;gap:6px;align-items:flex-start}
-.um-hint{font-size:12px;color:#556678;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:8px 10px;margin-top:8px}
-[data-theme="dark"] .um-route a{background:#14232e;border-color:#264355;color:#5eead4}
-</style>
-<script>
-/* Навигация: диплинки во внешние карты по адресу (ключи API не нужны).
-   Старт — текущее местоположение пользователя в самом приложении карт. */
-window.unityAddr=function(c,city){var a=(c.addresses||[]);var m=city&&a.find(function(x){return String(x).indexOf(city)===0});var addr=m||a[0]||'';
- if(addr&&city&&addr.indexOf(city)<0)addr=city+', '+addr;return addr};
-window.unityRouteLinks=function(c,city){
- var addr=unityAddr(c,city);if(!addr)return '<div class="um-hint">Адрес не указан: маршрут построить нельзя.</div>';
- var q=encodeURIComponent(addr+', Казахстан'),qn=encodeURIComponent((c.name||'')+', '+addr);
- var L=[['2ГИС','https://2gis.kz/search/'+qn],['Яндекс','https://yandex.kz/maps/?rtext=~'+q+'&rtt=auto'],['Google','https://www.google.com/maps/dir/?api=1&travelmode=driving&destination='+q]];
- var ph=c.phone&&c.phone!=='Не указан'?'<a class="t" href="tel:'+unityEsc(String(c.phone).replace(/[^+\d]/g,''))+'">Позвонить</a>':'';
- return '<div class="um-addr">📍 <span>'+unityEsc(addr)+'</span></div><div class="um-route">'+L.map(function(l){return '<a href="'+unityEsc(l[1])+'" target="_blank" rel="noopener noreferrer">Маршрут · '+l[0]+'</a>'}).join('')+ph+'</div>'};
-</script>
+
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-teal-500 selection:text-white">
-<a class="unity-skip" href="#clinics-section">К каталогу клиник</a>
-<noscript><div class="unity-noscript">Для работы Unity нужен JavaScript. Включите его в настройках браузера.</div></noscript>
     <div class="unity-prototype-notice" role="note" aria-label="Статус сервиса">
       <span class="unity-prototype-dot" aria-hidden="true"></span>
       <span><strong>Unity — демонстрационный прототип.</strong> Каталог и инструменты доступны для ознакомления; аккаунты, запись, чат и медицинская история пока не подключены к медицинским организациям. Не вводите ИИН и медицинские данные.</span>
@@ -653,6 +475,7 @@ window.unityRouteLinks=function(c,city){
                 <!-- Навигация (Десктоп) -->
                 <nav aria-label="Основная навигация" class="hidden xl:flex items-center gap-4 2xl:gap-5">
                     <a href="#clinics-section" class="text-sm font-medium text-slate-600 hover:text-teal-600 transition-colors">Клиники</a>
+                    <a href="#unity-map-section" class="text-sm font-semibold text-teal-700 hover:text-teal-600 transition-colors">Карта Unity</a>
                     <a href="#services-section" class="text-sm font-medium text-slate-600 hover:text-teal-600 transition-colors">ОСМС</a>
                     <a href="#calculator" class="text-sm font-medium text-slate-600 hover:text-teal-600 transition-colors">Калькулятор</a>
                     <a href="#medkz-pro-services" class="text-sm font-medium text-slate-600 hover:text-teal-600 transition-colors">Сервисы</a>
@@ -695,7 +518,7 @@ window.unityRouteLinks=function(c,city){
         <!-- Выпадающее мобильное меню -->
         <div id="mobile-menu" class="hidden xl:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-2 shadow-lg">
             <a href="#clinics-section" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-sky-50 hover:text-teal-600">Каталог клиник РК</a>
-            <a href="#patient-route" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-sky-50 hover:text-teal-600">Карта и маршрут</a>
+            <a href="#unity-map-section" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-semibold text-teal-700 bg-teal-50/70">Карта Unity</a>
             <a href="#services-section" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-sky-50 hover:text-teal-600">Услуги и ОСМС</a>
             <a href="#calculator" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-sky-50 hover:text-teal-600">Калькулятор здоровья</a>
             <a href="#medkz-pro-services" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-medium text-slate-700 hover:bg-sky-50 hover:text-teal-600">Сервисы Unity</a>
@@ -733,9 +556,19 @@ window.unityRouteLinks=function(c,city){
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <div class="max-w-4xl mx-auto text-center space-y-6">
-                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 text-xs sm:text-sm font-semibold"><span class="w-2 h-2 rounded-full bg-teal-500"></span>Реестр медорганизаций Республики Казахстан</div>
-                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.12]">Найдите врача или клинику <span class="u-grad">в Казахстане</span></h1>
-                <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">Больницы, поликлиники и частные клиники во всех регионах. Выберите город, найдите нужное учреждение и запишитесь.</p>
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm text-slate-700 text-xs sm:text-sm font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-teal-500 animate-pulse"></span>
+                    Полный реестр медорганизаций РК: больницы, научные центры, поликлиники и частные сети
+                </div>
+
+                <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.15]">
+                    Все клиники и больницы <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 to-sky-600">Республики Казахстан</span>
+                </h1>
+
+                <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                    Единый справочник и система записи: городские и областные больницы, республиканские научные центры, поликлиники ПМСП, роддома, лаборатории и ведущие частные клиники во всех 20 регионах.
+                </p>
+
                 <!-- Панель мгновенного поиска -->
                 <div class="bg-white p-2.5 sm:p-3 rounded-2xl sm:rounded-3xl shadow-xl shadow-slate-200/70 border border-slate-200/80 max-w-3xl mx-auto mt-6">
                     <div class="flex flex-col sm:flex-row gap-2.5">
@@ -774,12 +607,6 @@ window.unityRouteLinks=function(c,city){
                             Найти в реестре
                         </button>
                     </div>
-                    <nav class="u-quick" aria-label="Быстрые действия">
-                      <a href="#doctors-search-screen"><i data-lucide="stethoscope"></i><b>Врач</b><span>по специальности</span></a>
-                      <a href="#clinics-section"><i data-lucide="hospital"></i><b>Клиника</b><span>каталог реестра</span></a>
-                      <a href="#unity-own-map"><i data-lucide="map-pin"></i><b>На карте</b><span>рядом с вами</span></a>
-                      <a href="#booking-screen" class="primary"><i data-lucide="calendar-check"></i><b>Запись</b><span>на приём</span></a>
-                    </nav>
                     <!-- Быстрые теги поиска -->
                     <div class="flex flex-wrap items-center gap-2 mt-3 px-2 text-xs text-slate-500">
                         <span>Быстрый переход:</span>
@@ -962,7 +789,7 @@ window.unityRouteLinks=function(c,city){
 
             <!-- СЕТКА КАРТОЧЕК КЛИНИК И БОЛЬНИЦ -->
             <div id="clinics-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="u-skel" style="min-height:260px"></div><div class="u-skel" style="min-height:260px"></div><div class="u-skel hidden md:block" style="min-height:260px"></div>
+                <!-- Карточки рендерятся через JS -->
             </div>
 
             <!-- КОМПАКТНЫЙ РЕЕСТР-ТАБЛИЦА -->
@@ -1222,6 +1049,57 @@ window.unityRouteLinks=function(c,city){
       </div>
     </section>
 
+    <!-- UNITY: отдельный раздел медицинской карты -->
+    <section id="unity-map-section" class="py-12 sm:py-16 bg-slate-50 border-y border-slate-200/70">
+      <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mb-6 px-1">
+          <span class="inline-flex px-3 py-1 rounded-full bg-teal-100 text-teal-800 text-xs font-bold">UNITY MAP · KAZAKHSTAN</span>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-3">Карта Unity</h2>
+          <p class="text-slate-600 mt-2">Больницы, клиники, аптеки и другие медицинские объекты Казахстана. Откройте карту на весь экран для удобной навигации.</p>
+        </div>
+        <div class="grid grid-cols-1">
+          <article id="unity-map-card" class="md:col-span-2 xl:col-span-3" aria-label="Интерактивная медицинская карта Unity">
+ <div class="unity-osiris-head"><div class="unity-osiris-kicker">UNITY · MEDICAL INTELLIGENCE</div><h3 class="unity-osiris-title">Медицинская карта Казахстана</h3><p class="unity-osiris-sub">Интерактивная карта больниц, клиник и аптек по всей территории Республики Казахстан · поиск и маршруты</p></div>
+ <div class="unity-osiris-layout">
+  <aside class="unity-osiris-sidebar">
+   <div><div class="unity-osiris-kicker">ПОИСК ОБЪЕКТОВ</div><input id="unity-map-search" class="unity-osiris-search mt-2" placeholder="Название, город или адрес" autocomplete="off"><div class="grid grid-cols-2 gap-2 mt-2"><button class="unity-osiris-btn primary" onclick="searchUnityMap()">⌕ Найти</button><button class="unity-osiris-btn" onclick="locateUnityMap()">◎ Моё место</button></div></div>
+   <div class="unity-osiris-kicker">СЛОИ КАРТЫ</div>
+   <div class="grid grid-cols-2 gap-2"><button id="unity-map-dark" class="unity-osiris-btn active" onclick="setUnityMapLayer('dark')">Ночная</button><button id="unity-map-sat" class="unity-osiris-btn" onclick="setUnityMapLayer('sat')">Спутник</button></div>
+   <div class="unity-osiris-kicker">КАТЕГОРИИ МЕДИЦИНЫ</div>
+   <div class="unity-osiris-filters">
+    <label class="unity-osiris-filter"><input type="checkbox" id="unity-map-hospitals" checked onchange="loadUnityMapPlaces()"> 🏥 Больницы</label>
+    <label class="unity-osiris-filter"><input type="checkbox" id="unity-map-clinics" checked onchange="loadUnityMapPlaces()"> ⚕️ Клиники</label>
+    <label class="unity-osiris-filter"><input type="checkbox" id="unity-map-pharmacies" checked onchange="loadUnityMapPlaces()"> 💊 Аптеки</label>
+    <label class="unity-osiris-filter"><input type="checkbox" id="unity-map-vets" checked onchange="loadUnityMapPlaces()"> 🐾 Ветклиники</label>
+    <label class="unity-osiris-filter"><input type="checkbox" id="unity-map-dentists" onchange="loadUnityMapPlaces()"> 🦷 Стоматологии</label>
+    <label class="unity-osiris-filter"><input type="checkbox" id="unity-map-labs" onchange="loadUnityMapPlaces()"> 🧪 Лаборатории</label>
+   </div>
+   <div class="unity-osiris-legend"><span><i style="background:#20baff"></i>Больницы</span><span><i style="background:#18c5a0"></i>Клиники</span><span><i style="background:#ae7aff"></i>Аптеки</span><span><i style="background:#f59e0b"></i>Ветклиники</span></div>
+   <div class="unity-map-analytics" id="unity-map-analytics" aria-live="polite">
+    <div><b id="unity-map-total">—</b><span>объектов в области карты</span></div>
+    <div><b id="unity-map-hospital-count">—</b><span>больниц</span></div>
+    <div><b id="unity-map-clinic-count">—</b><span>клиник</span></div>
+    <div><b id="unity-map-vet-count">—</b><span>ветклиник</span></div>
+   </div>
+   <div class="grid grid-cols-2 gap-2">
+    <button type="button" class="unity-osiris-btn" onclick="showAllKazakhstan()">🇰🇿 Весь Казахстан</button>
+    <button type="button" class="unity-osiris-btn" onclick="refreshUnityMapPlaces()">↻ Обновить данные</button>
+   </div>
+   <div class="unity-osiris-kicker">СОРТИРОВКА</div>
+   <select id="unity-map-sort" class="unity-osiris-search" onchange="renderUnityMapDirectory()"><option value="name">По названию</option><option value="type">По категории</option><option value="distance">Сначала ближайшие</option></select>
+   <div id="unity-map-status" class="unity-osiris-count" role="status">Подключение к карте…</div>
+   <div id="unity-map-detail" class="unity-osiris-detail"></div>
+   <div id="unity-map-results" aria-live="polite"><div class="unity-osiris-count">Медицинские объекты появятся после загрузки данных.</div></div>
+   <div class="mt-auto"><input id="unity-route-origin" class="unity-osiris-search" placeholder="Откуда? (необязательно)"><button type="button" onclick="buildUnityRoute()" class="unity-osiris-btn primary w-full mt-2">➤ Построить маршрут</button><p class="text-[10px] text-slate-400 mt-2">Маршрут строится по дорогам через внешний сервис. Доступность зависит от его работы.</p></div>
+  </aside>
+  <div class="unity-osiris-mapstage"><div id="unity-map"></div><div class="unity-osiris-maptools"><button onclick="toggleUnityMapFullscreen()" id="unity-map-fullscreen-btn">⛶ На весь экран</button><button onclick="setUnityMapLayer('sat')">🛰 Спутник</button><button onclick="setUnityMapLayer('dark')">◐ Ночная</button><button onclick="locateUnityMap()">📍 Геолокация</button><button onclick="clearUnityRoute()">✕ Сбросить маршрут</button></div><div id="unity-map-overlay-status" class="unity-osiris-mapstatus">UNITY MAP · Загрузка карты</div></div>
+ </div>
+ <p class="px-4 py-3 text-[10px] text-slate-500 bg-slate-950">Данные объектов загружаются из OpenStreetMap через Overpass API. Спутниковые изображения предоставляются Esri. Это справочная карта: перед посещением уточняйте адрес и режим работы учреждения.</p>
+</article>
+        </div>
+      </div>
+    </section>
+
     <!-- UNITY: дополнительные сервисы -->
     <section id="medkz-pro-services" class="py-16 bg-slate-50 border-y border-slate-200/70">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -1238,46 +1116,7 @@ window.unityRouteLinks=function(c,city){
             <input id="doctor-search" class="mt-4 w-full border border-slate-200 rounded-xl px-3 py-2 text-sm" placeholder="Найти специальность..." oninput="filterDoctors()">
             <div id="doctor-list" class="mt-3 space-y-2"></div>
           </article>
-          <article id="unity-own-map" class="um-card md:col-span-2 xl:col-span-3" aria-label="Карта Unity">
-  <div class="um-head"><div><h3>Карта Unity</h3><p>Собственная схематичная карта Казахстана: размер круга показывает число учреждений в городе. Нажмите на город, чтобы увидеть список.</p></div>
-  <div class="um-head-btns"><button type="button" id="um-near">◎ Ближайший город</button><button type="button" id="um-full">⛶ На весь экран</button></div></div>
-  <div class="um-tools"><input id="um-q" type="search" placeholder="Название, тип или город" aria-label="Поиск по карте">
-    <select id="um-cat" aria-label="Тип учреждения"><option value="all">Все типы</option></select>
-    <div class="um-chips" role="group" aria-label="Фильтры"><button type="button" data-tag="all" class="on">Все</button><button type="button" data-tag="ОСМС">ОСМС</button><button type="button" data-tag="24/7">24/7</button></div></div>
-  <div class="um-body"><div class="um-stage"><svg id="um-svg" viewBox="0 0 1000 540" role="application" aria-label="Схематичная карта Казахстана" tabindex="0"><g id="um-g"><path id="um-border" d=""/><g id="um-pins"></g></g></svg>
-    <div class="um-zoom"><button type="button" data-z="1" aria-label="Приблизить">+</button><button type="button" data-z="-1" aria-label="Отдалить">−</button><button type="button" data-z="0" aria-label="Сбросить масштаб">⟲</button></div>
-    <div class="um-note">Схема для выбора города · маршруты открываются в 2ГИС, Яндекс или Google</div></div>
-  <aside class="um-panel" aria-live="polite"><div class="um-hint">Выберите город и учреждение, затем нажмите «Маршрут»: маршрут от вашего местоположения построит выбранное приложение карт. Для просмотра улиц используйте карту ниже.</div><div id="um-sum" class="um-sum"></div><div id="um-list" class="um-list"></div></aside></div>
-</article>
-<article id="unity-map-card" class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm md:col-span-2 xl:col-span-3">
-            <div class="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center"><i data-lucide="map" class="w-6 h-6"></i></div>
-            <h3 class="font-bold text-lg mt-3">Карта клиник и аптек</h3>
-            <p class="text-sm text-slate-500 mt-1">Интерактивная карта: ищите клиники, больницы и аптеки, нажимайте на метки, чтобы увидеть адрес и открыть маршрут.</p>
-            <div class="mt-4 flex flex-col sm:flex-row gap-2">
-              <input id="unity-map-search" class="min-w-0 flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Например: поликлиника или аптека">
-              <button onclick="searchUnityMap()" class="bg-teal-600 hover:bg-teal-700 text-white rounded-xl px-4 py-2.5 text-sm font-semibold">Найти</button>
-            </div>
-            <div class="flex flex-wrap gap-2 mt-2">
-              <button onclick="quickUnityMapSearch('')" class="px-3 py-2 rounded-lg bg-slate-900 text-white text-xs font-semibold">Все</button>
-              <button onclick="quickUnityMapSearch('больница')" class="px-3 py-2 rounded-lg bg-teal-50 text-teal-800 text-xs font-semibold">Больницы</button>
-              <button onclick="quickUnityMapSearch('поликлиника')" class="px-3 py-2 rounded-lg bg-sky-50 text-sky-800 text-xs font-semibold">Поликлиники</button>
-              <button onclick="quickUnityMapSearch('аптека')" class="px-3 py-2 rounded-lg bg-violet-50 text-violet-800 text-xs font-semibold">Аптеки</button>
-              <button onclick="locateUnityMap()" class="px-3 py-2 rounded-lg bg-slate-100 text-slate-700 text-xs font-semibold">Моё местоположение</button>
-            </div>
-            <button type="button" id="u-map-full-btn" class="u-map-full-btn" aria-pressed="false" onclick="unityMapFullscreen()">⛶ На весь экран</button>
-            <div id="unity-map-status" class="text-xs text-slate-500 mt-3" role="status">Подготовка карты Unity…</div>
-            <div id="unity-map" class="mt-3 border border-slate-200 overflow-hidden"></div>
-            <div id="unity-map-results" class="unity-map-results" aria-live="polite"></div>
-            <div class="mt-3 grid sm:grid-cols-[1fr_auto] gap-2">
-              <input id="unity-route-origin" aria-label="Начальная точка маршрута" class="min-w-0 border border-slate-200 rounded-xl px-3 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500" placeholder="Откуда? (пусто — моё местоположение)">
-              <button type="button" onclick="buildUnityRoute()" class="bg-slate-900 hover:bg-slate-700 text-white rounded-xl px-4 py-3 text-sm font-semibold inline-flex items-center justify-center gap-2">
-                <i data-lucide="route" class="w-4 h-4"></i> Построить маршрут
-              </button>
-            </div>
-            <p class="text-xs text-slate-500 mt-2">Найдите учреждение и нажмите на его метку. Маршрут откроется в 2ГИС с дорожной сетью и навигацией.</p>
 
-            <p id="map-city-note" class="text-xs text-slate-400 mt-3">Карта на основе OpenStreetMap. Точные точки появятся для адресов, которые удалось найти в открытой картографической базе; проверяйте адрес у клиники.</p>
-          </article>
           <article class="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm">
             <div class="w-11 h-11 rounded-xl bg-violet-100 text-violet-700 flex items-center justify-center"><i data-lucide="user-round" class="w-6 h-6"></i></div>
             <h3 class="font-bold text-lg mt-3">Личный кабинет — демо</h3>
@@ -1697,7 +1536,7 @@ window.unityRouteLinks=function(c,city){
 
                     <div>
                         <label class="block text-xs font-semibold text-slate-700 mb-1">Телефон (Казахстан)</label>
-                        <input type="tel" id="app-phone" required placeholder="+7 (7XX) XXX-XX-XX" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
+                        <input type="tel" id="app-phone" required placeholder="+7 (701) 000-00-00" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm text-slate-800 focus:outline-none focus:border-teal-500">
                     </div>
 
                     <p class="text-xs leading-relaxed text-slate-500">После отправки откроется WhatsApp клиники с подготовленным сообщением (если номер указан). Запись считается подтверждённой только после ответа клиники.</p>
@@ -3419,7 +3258,7 @@ window.unityRouteLinks=function(c,city){
             const ids = getFavoriteClinicIds();
             const next = ids.includes(clinicId) ? ids.filter(id => id !== clinicId) : [...ids, clinicId];
             try { localStorage.setItem(MEDKZ_FAVORITES_KEY, JSON.stringify(next)); }
-            catch (_) { unityToast('Браузер не разрешил сохранить избранное. Проверьте настройки хранения сайта.'); return; }
+            catch (_) { alert('Браузер не разрешил сохранить избранное. Проверьте настройки хранения сайта.'); return; }
             renderFavoriteClinics();
         }
         function clearFavoriteClinics() {
@@ -3536,28 +3375,54 @@ window.unityRouteLinks=function(c,city){
                         : clinic.cities.join(', ');
 
                     return `
-                    <article class="u-card">
-                        <div class="u-card-top">
-                            <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold ${getCategoryBadgeStyle(clinic.category)}">${clinic.category}</span>
-                            <span class="u-rate"><i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>${clinic.rating === '—' ? 'Нет оценок' : clinic.rating}</span>
+                    <div class="rounded-3xl bg-white border border-slate-200/90 hover:border-teal-400 p-6 shadow-sm hover:shadow-xl hover:shadow-teal-900/5 transition-all duration-300 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between gap-2 mb-3">
+                                <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold ${getCategoryBadgeStyle(clinic.category)}">
+                                    ${clinic.category}
+                                </span>
+                                <div class="flex items-center gap-1 text-xs font-bold text-slate-800 bg-amber-50 px-2.5 py-1 rounded-lg shrink-0">
+                                    <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-400 text-amber-400"></i>
+                                    <span>${clinic.rating === '—' ? 'Нет оценок' : clinic.rating}</span>
+                                </div>
+                            </div>
+
+                            <h3 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">${clinic.name}</h3>
+                            <div class="flex items-center gap-1.5 text-xs font-semibold text-teal-600 mt-1.5">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 shrink-0"></i>
+                                <span>${citiesLabel}</span>
+                            </div>
+
+                            <p class="text-sm text-slate-600 mt-3 leading-relaxed line-clamp-3">${clinic.shortDesc}</p>
+
+                            <div class="flex flex-wrap gap-1.5 mt-4">
+                                ${clinic.tags.map(tag => `
+                                    <span class="px-2.5 py-0.5 rounded-md text-[11px] font-semibold ${tag === 'ОСМС' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200/60' : tag === '24/7' ? 'bg-rose-50 text-rose-700 border border-rose-200/60' : 'bg-slate-100 text-slate-600'}">
+                                        ${tag}
+                                    </span>
+                                `).join('')}
+                            </div>
                         </div>
-                        <h3 class="u-card-title">${clinic.name}</h3>
-                        <p class="u-card-city"><i data-lucide="map-pin" class="w-3.5 h-3.5 shrink-0"></i>${citiesLabel}</p>
-                        <p class="u-card-desc">${clinic.shortDesc}</p>
-                        <div class="u-card-tags">${clinic.tags.slice(0, 3).map(tag => `<span class="${tag === 'ОСМС' ? 'ok' : tag === '24/7' ? 'hot' : ''}">${tag}</span>`).join('')}${clinic.tags.length > 3 ? `<span>+${clinic.tags.length - 3}</span>` : ''}</div>
-                        <details class="u-card-more">
-                            <summary>Контакты и адрес</summary>
-                            <div><i data-lucide="clock" class="w-3.5 h-3.5"></i>${clinic.hours}</div>
-                            <div><i data-lucide="building-2" class="w-3.5 h-3.5"></i>${displayAddress}</div>
-                            <div style="display:block">${unityRouteLinks(clinic, currentFilters.city !== 'all' ? currentFilters.city : '')}</div>
-                            <div><i data-lucide="phone" class="w-3.5 h-3.5"></i><a href="${clinic.phone && clinic.phone !== 'Не указан' ? `tel:${clinic.phone.replace(/[^+\d]/g, '')}` : '#'}">${clinic.phone || 'Телефон не указан'}</a></div>
-                        </details>
-                        <div class="u-card-actions">
-                            <button type="button" onclick="openAppointmentModal('${clinic.id}')" class="u-btn-main">Записаться</button>
-                            <button type="button" onclick="openClinicDetailModal('${clinic.id}')" class="u-btn-ghost">Подробнее</button>
-                            <button type="button" onclick="toggleFavoriteClinic('${clinic.id}')" class="u-btn-fav" aria-label="Добавить в избранное">☆</button>
+
+                        <div class="mt-5 pt-4 border-t border-slate-100 space-y-3">
+                            <div class="text-xs text-slate-500 space-y-1">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="flex items-center gap-1.5"><i data-lucide="clock" class="w-3.5 h-3.5 text-slate-400"></i> ${clinic.hours}</span>
+                                    <a href="${clinic.phone && clinic.phone !== 'Не указан' ? `tel:${clinic.phone.replace(/[^+\d]/g, '')}` : '#'}" class="font-semibold text-slate-700 hover:text-teal-600 shrink-0">${clinic.phone || 'Телефон не указан'}</a>
+                                </div>
+                                <div class="flex items-start gap-1.5">
+                                    <i data-lucide="building-2" class="w-3.5 h-3.5 text-slate-400 shrink-0 mt-0.5"></i>
+                                    <span class="line-clamp-1">${displayAddress}</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-3 gap-2 pt-1">
+                                <button onclick="openClinicDetailModal('${clinic.id}')" class="py-2.5 px-2 rounded-xl border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-semibold transition-colors">Подробнее</button>
+                                <button onclick="openAppointmentModal('${clinic.id}')" class="py-2.5 px-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold shadow-sm transition-colors">Запись</button>
+                                <button onclick="toggleFavoriteClinic('${clinic.id}')" class="py-2.5 px-2 rounded-xl border border-amber-200 bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-semibold transition-colors" aria-label="Добавить в избранное">☆ Избранное</button>
+                            </div>
                         </div>
-                    </article>
+                    </div>
                     `;
                 }).join('');
             } else {
@@ -3854,7 +3719,33 @@ window.unityRouteLinks=function(c,city){
           const select=document.getElementById('header-city-select');
           return select && select.value!=='all' ? select.value : 'Казахстан';
         }
-        function initUnityMap(){
+      
+  async function toggleUnityMapFullscreen(){
+    const stage=document.querySelector('#unity-map-card .unity-osiris-mapstage');
+    const btn=document.getElementById('unity-map-fullscreen-btn');
+    if(!stage)return;
+    const active=stage.classList.contains('unity-map-fullscreen') || document.fullscreenElement===stage;
+    if(active){
+      if(document.fullscreenElement===stage && document.exitFullscreen){try{await document.exitFullscreen();}catch(e){}}
+      stage.classList.remove('unity-map-fullscreen');document.body.classList.remove('unity-map-lock');
+      if(btn)btn.textContent='⛶ На весь экран';
+    }else{
+      stage.classList.add('unity-map-fullscreen');document.body.classList.add('unity-map-lock');
+      if(btn)btn.textContent='✕ Закрыть экран';
+      if(stage.requestFullscreen){try{await stage.requestFullscreen();}catch(e){/* CSS fullscreen fallback remains active */}}
+    }
+    setTimeout(()=>{if(window.__unityMapResize)window.__unityMapResize();},100);
+  }
+  document.addEventListener('fullscreenchange',()=>{
+    const stage=document.querySelector('#unity-map-card .unity-osiris-mapstage');
+    const btn=document.getElementById('unity-map-fullscreen-btn');
+    if(!document.fullscreenElement && stage && !stage.classList.contains('unity-map-fullscreen')){
+      document.body.classList.remove('unity-map-lock');if(btn)btn.textContent='⛶ На весь экран';
+    }
+    setTimeout(()=>{if(window.__unityMapResize)window.__unityMapResize();},100);
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){const stage=document.querySelector('#unity-map-card .unity-osiris-mapstage');if(stage?.classList.contains('unity-map-fullscreen')){stage.classList.remove('unity-map-fullscreen');document.body.classList.remove('unity-map-lock');const btn=document.getElementById('unity-map-fullscreen-btn');if(btn)btn.textContent='⛶ На весь экран';setTimeout(()=>{if(window.__unityMapResize)window.__unityMapResize();},100);}}});
+  function initUnityMap(){
           const el=document.getElementById('unity-map'); if(!el || el.dataset.ready==='1') return;
           el.dataset.ready='1';
           el.innerHTML=`<div class="unity-vector-map" aria-label="Интерактивная схематическая карта Казахстана">
@@ -3992,10 +3883,10 @@ window.unityRouteLinks=function(c,city){
         function unityRenderList(id,items,format){const el=document.getElementById(id);if(!el)return;el.innerHTML=items.length?items.map((x,i)=>`<div class="flex items-start justify-between gap-2 rounded-xl bg-slate-50 border border-slate-100 p-2"><span>${format(x)}</span><button type="button" class="text-rose-600 text-xs font-semibold" onclick="unityRemoveItem('${id}',${i})" aria-label="Удалить">Удалить</button></div>`).join(''):'<p class="text-xs text-slate-400">Пока ничего не добавлено.</p>';}
         function unityRemoveItem(id,i){const map={'doctor-question-list':unityQuestions,'medicine-reminders':unityMedicine,'health-event-list':unityEvents,'wellbeing-list':unityWellbeing};const arr=map[id];if(arr){arr.splice(i,1);unityRenderAllLists();}}
         function unityRenderAllLists(){unityRenderList('doctor-question-list',unityQuestions,x=>`<span class="font-medium">${medkzEscapeHtml(x)}</span>`);unityRenderList('medicine-reminders',unityMedicine,x=>`<strong>${medkzEscapeHtml(x.name)}</strong> · ${medkzEscapeHtml(x.time)}${x.note?' · '+medkzEscapeHtml(x.note):''}`);unityRenderList('health-event-list',unityEvents,x=>`<strong>${medkzEscapeHtml(x.title)}</strong> · ${medkzEscapeHtml(x.date)}`);unityRenderList('wellbeing-list',unityWellbeing,x=>`<strong>${medkzEscapeHtml(x.level)}</strong> · ${medkzEscapeHtml(x.note||'Без заметки')} <span class="text-slate-400">${medkzEscapeHtml(x.date)}</span>`);}
-        function unityAddQuestion(){const el=document.getElementById('doctor-question-input');const v=(el?.value||'').trim();if(!v)return;if(v.length>240){unityToast('Сократи вопрос до 240 символов.');return;}unityQuestions.push(v);el.value='';unityRenderAllLists();}
-        function unityAddMedicineReminder(){const name=(document.getElementById('med-name')?.value||'').trim(),time=document.getElementById('med-time')?.value||'',note=(document.getElementById('med-note')?.value||'').trim();if(!name||!time){unityToast('Укажи название и время напоминания.');return;}if(name.length>80||note.length>100){unityToast('Слишком длинное значение.');return;}unityMedicine.push({name,time,note});document.getElementById('med-name').value='';document.getElementById('med-note').value='';unityRenderAllLists();}
-        function unityAddHealthEvent(){const title=(document.getElementById('health-event-title')?.value||'').trim(),date=document.getElementById('health-event-date')?.value||'';if(!title||!date){unityToast('Укажи название события и дату.');return;}if(title.length>100){unityToast('Сократи название события.');return;}unityEvents.push({title,date});unityEvents.sort((a,b)=>a.date.localeCompare(b.date));document.getElementById('health-event-title').value='';unityRenderAllLists();}
-        function unityAddWellbeing(){const level=document.getElementById('wellbeing-level')?.value||'',note=(document.getElementById('wellbeing-note')?.value||'').trim();if(note.length>180){unityToast('Сократи заметку до 180 символов.');return;}unityWellbeing.unshift({level,note,date:new Date().toLocaleDateString('ru-RU')});document.getElementById('wellbeing-note').value='';unityRenderAllLists();}
+        function unityAddQuestion(){const el=document.getElementById('doctor-question-input');const v=(el?.value||'').trim();if(!v)return;if(v.length>240){alert('Сократи вопрос до 240 символов.');return;}unityQuestions.push(v);el.value='';unityRenderAllLists();}
+        function unityAddMedicineReminder(){const name=(document.getElementById('med-name')?.value||'').trim(),time=document.getElementById('med-time')?.value||'',note=(document.getElementById('med-note')?.value||'').trim();if(!name||!time){alert('Укажи название и время напоминания.');return;}if(name.length>80||note.length>100){alert('Слишком длинное значение.');return;}unityMedicine.push({name,time,note});document.getElementById('med-name').value='';document.getElementById('med-note').value='';unityRenderAllLists();}
+        function unityAddHealthEvent(){const title=(document.getElementById('health-event-title')?.value||'').trim(),date=document.getElementById('health-event-date')?.value||'';if(!title||!date){alert('Укажи название события и дату.');return;}if(title.length>100){alert('Сократи название события.');return;}unityEvents.push({title,date});unityEvents.sort((a,b)=>a.date.localeCompare(b.date));document.getElementById('health-event-title').value='';unityRenderAllLists();}
+        function unityAddWellbeing(){const level=document.getElementById('wellbeing-level')?.value||'',note=(document.getElementById('wellbeing-note')?.value||'').trim();if(note.length>180){alert('Сократи заметку до 180 символов.');return;}unityWellbeing.unshift({level,note,date:new Date().toLocaleDateString('ru-RU')});document.getElementById('wellbeing-note').value='';unityRenderAllLists();}
 
         // Unity Smart Tools: client-side helpers; no personal health data is uploaded.
         const medunityTerms = [
@@ -4424,8 +4315,8 @@ window.unityRouteLinks=function(c,city){
  }
  };
  const city={kk:{'Астана':'Астана','Алматы':'Алматы','Шымкент':'Шымкент','Караганда':'Қарағанды','Актобе':'Ақтөбе','Атырау':'Атырау','Актау':'Ақтау','Усть-Каменогорск':'Өскемен','Павлодар':'Павлодар','Костанай':'Қостанай','Уральск':'Орал','Тараз':'Тараз','Кызылорда':'Қызылорда','Туркестан':'Түркістан','Петропавловск':'Петропавл','Кокшетау':'Көкшетау','Семей':'Семей','Талдыкорган':'Талдықорған','Жезказган':'Жезқазған','Конаев':'Қонаев','Степногорск':'Степногорск','Атбасар':'Атбасар'},en:{'Астана':'Astana','Алматы':'Almaty','Шымкент':'Shymkent','Караганда':'Karaganda','Актобе':'Aktobe','Атырау':'Atyrau','Актау':'Aktau','Усть-Каменогорск':'Oskemen','Павлодар':'Pavlodar','Костанай':'Kostanay','Уральск':'Oral','Тараз':'Taraz','Кызылорда':'Kyzylorda','Туркестан':'Turkistan','Петропавловск':'Petropavl','Кокшетау':'Kokshetau','Семей':'Semey','Талдыкорган':'Taldykorgan','Жезказган':'Zhezkazgan','Конаев':'Qonaev','Степногорск':'Stepnogorsk','Атбасар':'Atbasar'}};
- let current='ru';const originalText=new WeakMap(),lastSet=new WeakMap();
- function translateNode(node,lang){if(!node||!node.nodeValue)return;if(!originalText.has(node)||lastSet.get(node)!==node.nodeValue)originalText.set(node,node.nodeValue);const raw=originalText.get(node);const trimmed=raw.trim();if(!trimmed)return;let value=dict[lang]?.[trimmed]??city[lang]?.[trimmed];if(lang==='ru')value=trimmed;if(value!==undefined){const start=raw.indexOf(trimmed);const nv=raw.slice(0,start)+value+raw.slice(start+trimmed.length);lastSet.set(node,nv);if(node.nodeValue!==nv)node.nodeValue=nv;}}
+ let current='ru';const originalText=new WeakMap();
+ function translateNode(node,lang){if(!node||!node.nodeValue)return;if(!originalText.has(node))originalText.set(node,node.nodeValue);const raw=originalText.get(node);const trimmed=raw.trim();if(!trimmed)return;let value=dict[lang]?.[trimmed]??city[lang]?.[trimmed];if(lang==='ru')value=trimmed;if(value!==undefined){const start=raw.indexOf(trimmed);node.nodeValue=raw.slice(0,start)+value+raw.slice(start+trimmed.length);}}
  function applyLanguage(lang){if(!dict[lang])lang='ru';current=lang;document.documentElement.lang=lang==='kk'?'kk':lang;const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);nodes.forEach(n=>translateNode(n,lang));document.querySelectorAll('option').forEach(o=>{const v=o.value;if(city[lang]?.[v])o.textContent=city[lang][v];});const title=document.querySelector('title');if(title)title.textContent=dict[lang]?.['Unity — медицинская платформа Казахстана']||'Unity — медицинская платформа Казахстана';
  document.querySelectorAll('[placeholder]').forEach(el=>{const ru=el.dataset.ruPlaceholder||el.getAttribute('placeholder');if(!el.dataset.ruPlaceholder)el.dataset.ruPlaceholder=ru;el.setAttribute('placeholder',dict[lang]?.[ru]||ru);});
  ['unity-language','unity-language-mobile','language-preview'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=lang;});
@@ -4499,7 +4390,7 @@ window.unityRouteLinks=function(c,city){
 </script>
 
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/maplibre-gl@5.6.1/dist/maplibre-gl.js"></script>
 
 
 <section id="doctors-search-screen" aria-label="Поиск врачей и клиник">
@@ -4613,139 +4504,423 @@ window.unityRouteLinks=function(c,city){
       <div id="unity-name-field" class="hidden"><label class="text-sm font-semibold text-slate-700">Ваше имя</label><input id="unity-auth-name" class="unity-auth-input" autocomplete="name" placeholder="Как к вам обращаться"></div>
       <div><label class="text-sm font-semibold text-slate-700">Электронная почта</label><input id="unity-auth-email" type="email" required class="unity-auth-input" autocomplete="email" placeholder="name@example.com"></div>
       <div><label class="text-sm font-semibold text-slate-700">Пароль</label><input id="unity-auth-password" type="password" required minlength="6" class="unity-auth-input" autocomplete="current-password" placeholder="Не менее 6 символов"></div>
+      <div id="unity-confirm-password-field" class="hidden"><label class="text-sm font-semibold text-slate-700">Повторите пароль</label><input id="unity-auth-confirm" type="password" minlength="6" class="unity-auth-input" autocomplete="new-password" placeholder="Повторите пароль"></div>
       <button id="unity-auth-submit" class="w-full py-3.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold shadow-lg shadow-teal-700/20" type="submit">Войти</button>
-      <p id="unity-auth-message" class="text-sm text-center text-slate-600" role="status"></p>
+      <button id="unity-forgot-password" type="button" onclick="unityResetPassword()" class="w-full text-sm font-semibold text-teal-700">Забыли пароль?</button>
+      <p id="unity-auth-message" class="text-sm text-center text-slate-600" role="status" aria-live="polite"></p>
     </form>
-    <p class="text-xs text-slate-400 mt-5 leading-relaxed">Демонстрационный интерфейс: данные не отправляются на сервер. Не используйте настоящий пароль. Для реальной регистрации нужен защищённый сервер и подтверждение почты.</p>
+    <p class="text-xs text-slate-400 mt-5 leading-relaxed">Аккаунты создаются через Supabase Auth. Для регистрации может потребоваться подтверждение электронной почты. Не вводите ИИН и медицинские данные.</p>
     <button onclick="hideUnityRegistration()" class="w-full mt-4 text-sm font-semibold text-teal-700">← Вернуться на главный экран</button>
   </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script id="unity-screens-and-2gis-map">
 (function(){
-  window.showUnityRegistration=function(){document.getElementById('unity-register-screen').classList.add('active');document.body.style.overflow='hidden';};
-  window.hideUnityRegistration=function(){document.getElementById('unity-register-screen').classList.remove('active');document.body.style.overflow='';};
+  // Supabase Auth for Unity. Fill these two public project values before deployment.
+  const UNITY_SUPABASE_URL = 'https://svulkjxkfyiywpzbrjur.supabase.co';
+  const UNITY_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_B-UWpw32AJaOccXcG2r3lA_mc-pnHld';
+  let unitySupabase = null;
+  let unityAuthUser = null;
+  const unityAuthMessage = (text, isError=false) => {
+    const el=document.getElementById('unity-auth-message');
+    if(el){el.textContent=text;el.style.color=isError?'#b91c1c':'#0f766e';}
+  };
+  function unityGetClient(){
+    if(unitySupabase)return unitySupabase;
+    if(!window.supabase?.createClient){unityAuthMessage('Не удалось загрузить библиотеку авторизации. Проверьте подключение к интернету.',true);return null;}
+    if(UNITY_SUPABASE_URL.includes('PASTE_')||UNITY_SUPABASE_PUBLISHABLE_KEY.includes('PASTE_')){
+      unityAuthMessage('Сначала вставьте Project URL и Publishable key в настройки Unity в HTML-файле.',true);return null;
+    }
+    try{unitySupabase=window.supabase.createClient(UNITY_SUPABASE_URL,UNITY_SUPABASE_PUBLISHABLE_KEY);return unitySupabase;}
+    catch(e){unityAuthMessage('Проверьте Project URL и Publishable key.',true);return null;}
+  }
+  function unityRenderAccount(user){
+    unityAuthUser=user||null;
+    const profile=document.querySelector('#profile-screen .unity-platform-head');
+    const title=profile?.querySelector('.unity-platform-title');
+    const sub=profile?.querySelector('.unity-platform-sub');
+    const action=profile?.querySelector('button');
+    const welcome=document.querySelector('#profile-screen .unity-platform-card h3');
+    const welcomeText=welcome?.nextElementSibling;
+    if(user){
+      const name=user.user_metadata?.full_name||user.email||'Пользователь Unity';
+      if(title)title.textContent='Личный кабинет';
+      if(sub)sub.textContent='Вы вошли как '+name+'. Управляйте настройками своего аккаунта.';
+      if(action){action.textContent='Выйти';action.onclick=()=>unitySignOut();}
+      if(welcome)welcome.textContent='Здравствуйте, '+name+'!';
+      if(welcomeText)welcomeText.textContent='Ваш аккаунт Unity активен. Настройки профиля доступны в личном кабинете.';
+    }else{
+      if(sub)sub.textContent='Войдите или создайте аккаунт, чтобы получить доступ к персональным функциям.';
+      if(action){action.textContent='Войти в аккаунт';action.onclick=()=>showUnityRegistration();}
+      if(welcome)welcome.textContent='Добро пожаловать в Unity';
+      if(welcomeText)welcomeText.textContent='Войдите или создайте аккаунт, чтобы получить доступ к персональным функциям.';
+    }
+  }
+  async function unityInitAuth(){
+    const client=unityGetClient();if(!client)return;
+    try{
+      const {data,error}=await client.auth.getSession();if(error)throw error;
+      unityRenderAccount(data.session?.user||null);
+      client.auth.onAuthStateChange((_event,session)=>unityRenderAccount(session?.user||null));
+    }catch(e){console.warn('Unity auth init:',e);}
+  }
+  window.showUnityRegistration=function(){
+    const screen=document.getElementById('unity-register-screen');if(screen)screen.classList.add('active');
+    document.body.style.overflow='hidden';
+    if(unityAuthUser){unityAuthMessage('Вы уже вошли как '+unityAuthUser.email+'.');}
+  };
+  window.hideUnityRegistration=function(){const screen=document.getElementById('unity-register-screen');if(screen)screen.classList.remove('active');document.body.style.overflow='';};
   window.setUnityAuthMode=function(mode){
     const signup=mode==='signup';
     document.getElementById('unity-login-tab').classList.toggle('active',!signup);
     document.getElementById('unity-signup-tab').classList.toggle('active',signup);
     document.getElementById('unity-name-field').classList.toggle('hidden',!signup);
+    document.getElementById('unity-confirm-password-field').classList.toggle('hidden',!signup);
     document.getElementById('unity-auth-name').required=signup;
+    document.getElementById('unity-auth-confirm').required=signup;
     document.getElementById('unity-auth-password').autocomplete=signup?'new-password':'current-password';
     document.getElementById('unity-auth-submit').textContent=signup?'Создать аккаунт':'Войти';
-    document.getElementById('unity-auth-message').textContent='';
+    document.getElementById('unity-forgot-password').classList.toggle('hidden',signup);
+    unityAuthMessage('');
   };
-  window.submitUnityAuth=function(e){
+  window.submitUnityAuth=async function(e){
     e.preventDefault();
-    const mode=document.getElementById('unity-name-field').classList.contains('hidden')?'login':'signup';
+    const client=unityGetClient();if(!client)return;
+    const signup=!document.getElementById('unity-name-field').classList.contains('hidden');
     const email=document.getElementById('unity-auth-email').value.trim();
     const name=document.getElementById('unity-auth-name').value.trim();
-    const msg=document.getElementById('unity-auth-message');
-    if(mode==='signup'){
-      msg.textContent='Демо-регистрация заполнена для '+email+'. Для создания реального аккаунта подключите сервер авторизации.';
-    }else{
-      msg.textContent='Это демонстрационный экран. Серверная авторизация пока не подключена.';
-    }
+    const password=document.getElementById('unity-auth-password').value;
+    const confirm=document.getElementById('unity-auth-confirm').value;
+    const button=document.getElementById('unity-auth-submit');
+    if(signup&&password!==confirm){unityAuthMessage('Пароли не совпадают.',true);return;}
+    if(password.length<6){unityAuthMessage('Пароль должен содержать не менее 6 символов.',true);return;}
+    button.disabled=true;button.textContent=signup?'Создаём аккаунт…':'Входим…';unityAuthMessage('');
+    try{
+      if(signup){
+        const {data,error}=await client.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:window.location.origin}});
+        if(error)throw error;
+        if(data.session){unityRenderAccount(data.user);unityAuthMessage('Регистрация успешна. Вы вошли в Unity.');setTimeout(()=>window.hideUnityRegistration(),900);}
+        else unityAuthMessage('Аккаунт создан. Проверьте почту и перейдите по ссылке подтверждения, затем войдите.');
+      }else{
+        const {data,error}=await client.auth.signInWithPassword({email,password});
+        if(error)throw error;
+        unityRenderAccount(data.user);unityAuthMessage('Вход выполнен успешно.');setTimeout(()=>window.hideUnityRegistration(),700);
+      }
+    }catch(err){
+      const message=err?.message||'Не удалось выполнить запрос.';
+      unityAuthMessage(message,true);
+    }finally{button.disabled=false;button.textContent=signup?'Создать аккаунт':'Войти';}
   };
+  window.unityResetPassword=async function(){
+    const client=unityGetClient();if(!client)return;
+    const email=document.getElementById('unity-auth-email').value.trim();
+    if(!email){unityAuthMessage('Сначала укажите электронную почту.',true);return;}
+    try{const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:window.location.origin});if(error)throw error;unityAuthMessage('Если аккаунт с таким адресом существует, инструкция для сброса пароля отправлена на почту.');}
+    catch(e){unityAuthMessage(e.message||'Не удалось отправить письмо.',true);}
+  };
+  window.unitySignOut=async function(){
+    const client=unityGetClient();if(!client)return;
+    try{const {error}=await client.auth.signOut();if(error)throw error;unityRenderAccount(null);unityAuthMessage('Вы вышли из аккаунта.');window.showUnityRegistration();}
+    catch(e){unityAuthMessage(e.message||'Не удалось выйти из аккаунта.',true);}
+  };
+  document.addEventListener('DOMContentLoaded',unityInitAuth);
 
-  // OpenStreetMap + Leaflet: реальная дорожная подложка вместо схематической карты.
-  let map=null, markers=[], userMarker=null, lastDestination=null, geocodeCache={};
-  const cityCoords={
-    'Алматы':[43.2383,76.9455],'Астана':[51.1694,71.4491],'Шымкент':[42.3417,69.5901],
-    'Караганда':[49.806,73.085],'Актобе':[50.2839,57.167],'Атырау':[47.0945,51.9238],
-    'Актау':[43.6532,51.1975],'Усть-Каменогорск':[49.9483,82.6278],'Павлодар':[52.287,76.967],
-    'Костанай':[53.2144,63.6246],'Уральск':[51.2278,51.3865],'Тараз':[42.9,71.3667],
-    'Кызылорда':[44.8488,65.4823],'Туркестан':[43.3019,68.2698],'Петропавловск':[54.8667,69.15],
-    'Кокшетау':[53.2833,69.3833],'Семей':[50.4111,80.2275],'Талдыкорган':[45.0156,78.3739],
-    'Жезказган':[47.7833,67.7667],'Конаев':[43.8833,77.0667]
-  };
-  function cityOf(c){return (c.cities||[])[0]||'Алматы';}
-  function clinicIcon(){return L.divIcon({className:'',html:'<div class="unity-leaflet-pin"><span>+</span></div>',iconSize:[28,34],iconAnchor:[14,32],popupAnchor:[0,-30]});}
-  function mapItems(term=''){
-    const city=document.getElementById('header-city-select')?.value||'all',q=term.toLowerCase();
-    return (window.clinicsData||[]).filter(c=>{
-      const hay=[c.name,c.category,...(c.cities||[]),...(c.addresses||[]),...(c.tags||[])].join(' ').toLowerCase();
-      return (!q||hay.includes(q))&&(city==='all'||(c.cities||[]).includes(city));
+  // Unity medical map: wider OSM coverage, resilient Overpass fallback and useful filters.
+  let unityGLMap=null, unityGLMarkers=[], unityGLUserMarker=null, unityGLSelected=null;
+  let unityGLRouteAdded=false, unityGLLoading=false, unityGLMoveTimer=null, unityGLPlaces=[];
+  let unityGLLayer='dark', unityGLRequest=0, unityGLQueuedReload=false, unityGLUserLocation=null;
+  const unityGLIcons={hospital:'🏥',clinic:'⚕️',pharmacy:'💊',vet:'🐾',dentist:'🦷',lab:'🧪'};
+  const unityGLEndpoints=[
+    'https://overpass-api.de/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://overpass.private.coffee/api/interpreter'
+  ];
+  function unityGLType(tags){
+    const a=tags.amenity||'',h=tags.healthcare||'',v=tags.veterinary||'';
+    if(a==='veterinary'||h==='veterinary'||v==='yes')return 'vet';
+    if(a==='dentist'||h==='dentist')return 'dentist';
+    if(a==='pharmacy'||h==='pharmacy')return 'pharmacy';
+    if(a==='hospital'||h==='hospital')return 'hospital';
+    if(a==='clinic'||a==='doctors'||h==='clinic'||h==='doctor'||h==='centre')return 'clinic';
+    if(a==='laboratory'||h==='laboratory'||h==='diagnostic')return 'lab';
+    return 'clinic';
+  }
+  function unityGLStatus(message){
+    const a=document.getElementById('unity-map-status'),b=document.getElementById('unity-map-overlay-status');
+    if(a)a.textContent=message;if(b)b.textContent='UNITY MAP · '+message;
+  }
+  function unityGLQuery(){
+    if(!unityGLMap)return '';
+    const b=unityGLMap.getBounds(),box=[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()].join(',');
+    const selectors=[];
+    const add=(enabled,queries)=>{if(enabled)queries.forEach(q=>selectors.push(q+'('+box+')'));};
+    add(document.getElementById('unity-map-hospitals')?.checked,[
+      'node["amenity"="hospital"]','way["amenity"="hospital"]','relation["amenity"="hospital"]',
+      'node["healthcare"="hospital"]','way["healthcare"="hospital"]','relation["healthcare"="hospital"]'
+    ]);
+    add(document.getElementById('unity-map-clinics')?.checked,[
+      'node["amenity"="clinic"]','way["amenity"="clinic"]','relation["amenity"="clinic"]',
+      'node["amenity"="doctors"]','way["amenity"="doctors"]','node["healthcare"="clinic"]',
+      'way["healthcare"="clinic"]','node["healthcare"="doctor"]','way["healthcare"="doctor"]',
+      'node["healthcare"="centre"]','way["healthcare"="centre"]'
+    ]);
+    add(document.getElementById('unity-map-pharmacies')?.checked,[
+      'node["amenity"="pharmacy"]','way["amenity"="pharmacy"]','node["healthcare"="pharmacy"]','way["healthcare"="pharmacy"]'
+    ]);
+    add(document.getElementById('unity-map-vets')?.checked,[
+      'node["amenity"="veterinary"]','way["amenity"="veterinary"]','relation["amenity"="veterinary"]',
+      'node["healthcare"="veterinary"]','way["healthcare"="veterinary"]'
+    ]);
+    add(document.getElementById('unity-map-dentists')?.checked,[
+      'node["amenity"="dentist"]','way["amenity"="dentist"]','relation["amenity"="dentist"]',
+      'node["healthcare"="dentist"]','way["healthcare"="dentist"]'
+    ]);
+    add(document.getElementById('unity-map-labs')?.checked,[
+      'node["amenity"="laboratory"]','way["amenity"="laboratory"]',
+      'node["healthcare"="laboratory"]','way["healthcare"="laboratory"]',
+      'node["healthcare"="diagnostic"]','way["healthcare"="diagnostic"]'
+    ]);
+    return selectors.length?'[out:json][timeout:25];('+selectors.join(';')+');out center tags;':'';
+  }
+  function initUnityMap(){
+    const el=document.getElementById('unity-map');if(!el||unityGLMap)return;
+    if(!window.maplibregl){
+      unityGLStatus('Подключаем библиотеку карты…');
+      if(!window.__unityMapLibLoading){
+        window.__unityMapLibLoading=true;
+        const fallback=document.createElement('script');
+        fallback.src='https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.1/dist/maplibre-gl.js';
+        fallback.onload=()=>{window.__unityMapLibLoading=false;initUnityMap();};
+        fallback.onerror=()=>{window.__unityMapLibLoading=false;unityGLStatus('Не удалось загрузить библиотеку карты. Проверьте интернет или CDN.');};
+        document.head.appendChild(fallback);
+      }
+      return;
+    }
+    try{
+      // Use standard OpenStreetMap tiles for both day and night modes.
+      // Night mode is rendered locally with a CSS filter, so it does not depend
+      // on CARTO API keys or a separate dark-tile provider.
+      const baseTiles=['https://tile.openstreetmap.org/{z}/{x}/{y}.png'];
+      const satTiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+      const satLabels='https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
+      unityGLMap=new maplibregl.Map({
+        container:el,center:[66.9,48.0],zoom:4.7,minZoom:4,maxZoom:19,
+        maxBounds:[[45.5,40.0],[88.5,56.5]],
+        fadeDuration:0,renderWorldCopies:false,
+        style:{version:8,sources:{
+          unityBase:{type:'raster',tiles:baseTiles,tileSize:256,maxzoom:19,attribution:'© OpenStreetMap contributors'},
+          unitySat:{type:'raster',tiles:[satTiles],tileSize:256,maxzoom:19,attribution:'Imagery © Esri'},
+          unitySatLabels:{type:'raster',tiles:[satLabels],tileSize:256,maxzoom:19,attribution:'Labels © Esri'}
+        },layers:[
+          {id:'unity-base-layer',type:'raster',source:'unityBase',paint:{'raster-fade-duration':0,'raster-opacity':1}},
+          {id:'unity-sat-layer',type:'raster',source:'unitySat',layout:{visibility:'none'},paint:{'raster-fade-duration':0}},
+          {id:'unity-sat-labels-layer',type:'raster',source:'unitySatLabels',layout:{visibility:'none'},paint:{'raster-fade-duration':0,'raster-opacity':0.95}}
+        ]},projection:{type:'mercator'},attributionControl:true
+      });
+      unityGLMap.addControl(new maplibregl.NavigationControl(),'top-right');
+      unityGLMap.addControl(new maplibregl.ScaleControl(),'bottom-right');
+      unityGLMap.on('load',()=>{unityGLStatus('Карта Казахстана готова · загружаем медицинские объекты');setUnityMapLayer(unityGLLayer);loadUnityMapPlaces();setTimeout(()=>unityGLMap.resize(),250);});
+      unityGLMap.on('error',e=>{if(e?.error)console.warn('Unity map tile/style error:',e.error);});
+      unityGLMap.on('moveend',()=>{clearTimeout(unityGLMoveTimer);unityGLMoveTimer=setTimeout(loadUnityMapPlaces,850);});
+      window.__unityMapResize=()=>{if(unityGLMap){unityGLMap.resize();setTimeout(()=>unityGLMap.resize(),250);}};
+    }catch(error){console.error('Unity map initialization failed:',error);unityGLStatus('Ошибка запуска карты. Перезагрузите страницу и проверьте интернет.');}
+  }
+  function setUnityMapLayer(layer){
+    unityGLLayer=layer==='sat'?'sat':'dark';
+    const apply=()=>{
+      if(!unityGLMap||!unityGLMap.getLayer('unity-base-layer')||!unityGLMap.getLayer('unity-sat-layer'))return;
+      unityGLMap.setLayoutProperty('unity-base-layer','visibility',unityGLLayer==='dark'?'visible':'none');
+      unityGLMap.setLayoutProperty('unity-sat-layer','visibility',unityGLLayer==='sat'?'visible':'none');
+      if(unityGLMap.getLayer('unity-sat-labels-layer'))unityGLMap.setLayoutProperty('unity-sat-labels-layer','visibility',unityGLLayer==='sat'?'visible':'none');
+      // Filter only the MapLibre canvas (not HTML medical markers or controls).
+      const canvas=unityGLMap.getCanvas();
+      if(canvas)canvas.style.filter=unityGLLayer==='dark'?'invert(1) hue-rotate(180deg) brightness(.78) contrast(.88) saturate(.72)':'none';
+      unityGLMap.triggerRepaint();
+    };
+    if(unityGLMap){if(unityGLMap.isStyleLoaded())apply();else unityGLMap.once('load',apply);}
+    document.getElementById('unity-map-dark')?.classList.toggle('active',layer==='dark');
+    document.getElementById('unity-map-sat')?.classList.toggle('active',layer==='sat');
+  }
+  function clearUnityGLMarkers(){unityGLMarkers.forEach(m=>m.remove());unityGLMarkers=[];}
+  function updateUnityMapAnalytics(list){
+    const count=(type)=>list.filter(p=>p.type===type).length;
+    const values={'unity-map-total':list.length,'unity-map-hospital-count':count('hospital'),'unity-map-clinic-count':count('clinic'),'unity-map-vet-count':count('vet')};
+    Object.entries(values).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.textContent=String(value);});
+  }
+  function unityGLVisibleList(){
+    const sort=document.getElementById('unity-map-sort')?.value||'name';
+    const list=unityGLPlaces.slice();
+    if(sort==='distance'&&unityGLUserLocation){
+      list.sort((a,b)=>unityGLDistance(a)-unityGLDistance(b));
+    }else if(sort==='type'){
+      list.sort((a,b)=>a.type.localeCompare(b.type,'ru')||a.name.localeCompare(b.name,'ru'));
+    }else list.sort((a,b)=>a.name.localeCompare(b.name,'ru'));
+    return list;
+  }
+  function unityGLDistance(p){
+    if(!unityGLUserLocation)return Infinity;
+    const rad=x=>x*Math.PI/180,lat1=rad(unityGLUserLocation[1]),lat2=rad(p.lat),dLat=lat2-lat1,dLon=rad(p.lon-unityGLUserLocation[0]);
+    const q=Math.sin(dLat/2)**2+Math.cos(lat1)*Math.cos(lat2)*Math.sin(dLon/2)**2;
+    return 6371*2*Math.atan2(Math.sqrt(q),Math.sqrt(1-q));
+  }
+  function renderUnityMapMarkers(items){
+    if(!unityGLMap)return;clearUnityGLMarkers();
+    (items||unityGLPlaces).forEach(p=>{
+      const node=document.createElement('button');node.type='button';node.className='unity-osiris-pin '+p.type;
+      node.textContent=unityGLIcons[p.type]||'•';node.title=p.name;node.setAttribute('aria-label',p.name);
+      node.addEventListener('click',()=>showUnityMapPlace(p.id));
+      const marker=new maplibregl.Marker({element:node,anchor:'bottom'}).setLngLat([p.lon,p.lat]).addTo(unityGLMap);unityGLMarkers.push(marker);
     });
   }
-  window.initUnityMap=function(){
-    const el=document.getElementById('unity-map');if(!el||!window.L||map)return;
-    el.innerHTML='';
-    const selected=document.getElementById('header-city-select')?.value||'all';
-    const center=selected!=='all'&&cityCoords[selected]?cityCoords[selected]:[48.2,67.2];
-    map=L.map(el,{zoomControl:false,scrollWheelZoom:true}).setView(center,selected==='all'?5:12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-      maxZoom:19,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>'
-    }).addTo(map);
-    L.control.zoom({position:'topright'}).addTo(map);
-    if(!el.querySelector('.unity-map-fab')){
-      const top=document.createElement('div');top.className='unity-map-topline';top.innerHTML='<span>UNITY · КАРТА</span><span>Клиники и аптеки</span>';el.appendChild(top);
-      const locate=document.createElement('button');locate.type='button';locate.className='unity-map-fab';locate.title='Моё местоположение';locate.setAttribute('aria-label','Показать моё местоположение');locate.innerHTML='◎';locate.addEventListener('click',()=>window.locateUnityMap());el.appendChild(locate);
-    }
-    window.renderUnityMapMarkers();
-    const status=document.getElementById('unity-map-status');
-    if(status)status.textContent='Карта улиц загружена. Выберите клинику в списке или найдите её по названию.';
-    setTimeout(()=>map.invalidateSize(),250);
-  };
-  window.renderUnityMapMarkers=function(items){
-    if(!map)return;
-    markers.forEach(m=>map.removeLayer(m));markers=[];
-    const list=items||mapItems();
-    // До геокодирования показываем точки города, не выдавая их за точные адреса.
-    const groups={};
-    list.forEach(c=>{const city=cityOf(c);if(cityCoords[city]){groups[city]??=[];groups[city].push(c);}});
-    Object.entries(groups).forEach(([city,cs])=>{
-      const ll=cityCoords[city];
-      const marker=L.marker(ll,{icon:clinicIcon()}).addTo(map);
-      marker.bindPopup('<b>'+city+'</b><br>'+cs.length+' учреждений в каталоге<br><small>Точка показывает центр города, не адрес клиники</small>');
-      markers.push(marker);
+  function renderUnityMapDirectory(items){
+    const root=document.getElementById('unity-map-results');if(!root)return;
+    const list=items||unityGLVisibleList();root.replaceChildren();updateUnityMapAnalytics(list);
+    const count=document.createElement('div');count.className='unity-osiris-count';count.textContent='Найдено объектов в текущей области: '+list.length;root.appendChild(count);
+    list.slice(0,100).forEach(p=>{
+      const btn=document.createElement('button');btn.type='button';btn.className='unity-map-result';
+      const name=document.createElement('b');name.textContent=(unityGLIcons[p.type]||'•')+' '+p.name;
+      const small=document.createElement('small');small.textContent=p.address||'Адрес в открытой базе не указан';
+      const meta=document.createElement('div');meta.className='unity-map-result-meta';
+      const category={hospital:'Больница',clinic:'Клиника',pharmacy:'Аптека',vet:'Ветклиника',dentist:'Стоматология',lab:'Лаборатория'}[p.type]||'Медицинская организация';
+      const tag=document.createElement('span');tag.textContent=category;meta.appendChild(tag);
+      if(p.phone){const ph=document.createElement('span');ph.textContent=p.phone;meta.appendChild(ph);}
+      if(unityGLUserLocation){const km=unityGLDistance(p);if(Number.isFinite(km)){const dist=document.createElement('span');dist.textContent=km.toFixed(1)+' км';meta.appendChild(dist);}}
+      btn.append(name,small,meta);btn.addEventListener('click',()=>showUnityMapPlace(p.id));root.appendChild(btn);
     });
-  };
-  window.renderUnityMapDirectory=function(items){
-    const panel=document.getElementById('unity-map-results');if(!panel)return;
-    const list=items||mapItems();
-    panel.innerHTML='<div class="unity-map-directory-head"><b>Учреждения: '+list.length+'</b><span>Выберите клинику, чтобы открыть её местоположение</span></div>'+
-      (list.length?list.slice(0,40).map(c=>'<button type="button" class="unity-map-result" data-unity-place="'+String(c.id).replace(/[^a-zA-Z0-9_-]/g,'')+'"><b>'+esc(c.name)+'</b><small>'+esc((c.cities||[]).join(', '))+' · '+esc(c.category||'')+'</small></button>').join(''):'<p class="text-sm text-slate-500 p-3">В выбранном городе ничего не найдено.</p>');
-    panel.querySelectorAll('[data-unity-place]').forEach(b=>b.addEventListener('click',()=>window.showUnityMapPlace(b.dataset.unityPlace)));
-  };
-  function esc(v){const d=document.createElement('div');d.textContent=v||'';return d.innerHTML;}
-  window.showUnityMapPlace=function(id){
-    const c=(window.clinicsData||[]).find(x=>x.id===id);if(!c)return;
-    const city=cityOf(c),ll=cityCoords[city]||[48.2,67.2],address=(c.addresses||[])[0]||city;
-    lastDestination={name:c.name,city,coords:ll};
-    if(map){map.setView(ll,12);L.popup().setLatLng(ll).setContent('<b>'+esc(c.name)+'</b><br>'+esc(address)+'<br><small>Показан ориентир города. Точный адрес и маршрут уточните в 2ГИС.</small>').openOn(map);}
-    const status=document.getElementById('unity-map-status');
-    if(status)status.textContent=c.name+' · '+address+' · '+city+'. На карте показан ориентир города, а не подтверждённые координаты здания.';
-  };
-  window.searchUnityMap=async function(queryOverride){
-    if(!map)window.initUnityMap();
+    if(list.length>100){const more=document.createElement('div');more.className='unity-osiris-count';more.textContent='Показаны первые 100 объектов. Увеличьте масштаб карты или уточните поиск.';root.appendChild(more);}
+    if(!list.length){const empty=document.createElement('div');empty.className='unity-osiris-count';empty.textContent='В этой области объекты не найдены. Переместите карту, включите нужные категории или обновите данные.';root.appendChild(empty);}
+  }
+  async function unityGLFetchOverpass(query,request){
+    let lastError=null;
+    for(const endpoint of unityGLEndpoints){
+      if(request!==unityGLRequest)throw new Error('Запрос отменён');
+      const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),26000);
+      try{
+        const response=await fetch(endpoint,{method:'POST',body:query,signal:controller.signal,headers:{'Content-Type':'text/plain;charset=UTF-8'}});
+        if(!response.ok)throw new Error('Overpass HTTP '+response.status);
+        const data=await response.json();
+        if(request!==unityGLRequest)throw new Error('Запрос отменён');
+        return data;
+      }catch(error){lastError=error;}
+      finally{clearTimeout(timer);}
+    }
+    throw lastError||new Error('Все серверы данных недоступны');
+  }
+  async function loadUnityMapPlaces(){
+    if(!unityGLMap)return;
+    if(unityGLLoading){unityGLQueuedReload=true;return;}
+    if(unityGLMap.getZoom()<7){
+      unityGLPlaces=[];clearUnityGLMarkers();renderUnityMapDirectory([]);
+      unityGLStatus('Приблизьте карту до города (масштаб 7+) — тогда загрузим медучреждения.');
+      return;
+    }
+    const query=unityGLQuery();
+    if(!query){unityGLPlaces=[];renderUnityMapMarkers([]);renderUnityMapDirectory([]);unityGLStatus('Выберите хотя бы одну категорию');return;}
+    unityGLLoading=true;unityGLQueuedReload=false;const request=++unityGLRequest;
+    unityGLStatus('Ищем больницы, клиники и другие объекты в видимой области…');
+    try{
+      const data=await unityGLFetchOverpass(query,request);
+      const found=(data.elements||[]).map(el=>{
+        const lat=el.lat??el.center?.lat,lon=el.lon??el.center?.lon;if(lat==null||lon==null)return null;
+        const t=el.tags||{},type=unityGLType(t);
+        const address=[t['addr:city']||t['addr:place'],t['addr:street'],t['addr:housenumber']].filter(Boolean).join(', ');
+        return{id:el.type+'-'+el.id,name:t.name||t['name:ru']||t['name:kk']||t['name:en']||'Медицинское учреждение',lat,lon,type,address,phone:t.phone||t['contact:phone']||'',hours:t.opening_hours||'',website:t.website||t['contact:website']||'',operator:t.operator||'',source:'OpenStreetMap'};
+      }).filter(Boolean);
+      unityGLPlaces=Array.from(new Map(found.map(p=>[p.id,p])).values());
+      renderUnityMapMarkers();renderUnityMapDirectory();unityGLStatus('Объектов: '+unityGLPlaces.length+' · открытые данные OpenStreetMap');
+    }catch(e){
+      if(String(e?.message||'').includes('отменён'))return;
+      unityGLStatus('Не удалось загрузить данные: серверы Overpass не ответили. Попробуйте ещё раз через минуту или приблизьте карту.');
+      const root=document.getElementById('unity-map-results');
+      if(root){root.replaceChildren();const msg=document.createElement('div');msg.className='unity-osiris-count';msg.textContent='Не удалось получить свежие объекты. Подложка карты остаётся доступной; попробуйте «Обновить данные» чуть позже.';root.appendChild(msg);}
+    }finally{
+      unityGLLoading=false;
+      if(unityGLQueuedReload){unityGLQueuedReload=false;setTimeout(loadUnityMapPlaces,150);}
+    }
+  }
+  function refreshUnityMapPlaces(){unityGLRequest++;if(unityGLLoading){unityGLQueuedReload=true;return;}loadUnityMapPlaces();}
+  function showAllKazakhstan(){
+    if(!unityGLMap){initUnityMap();return;}
+    unityGLMap.fitBounds([[46.4,40.5],[87.4,55.5]],{padding:35,duration:900});
+    unityGLStatus('Весь Казахстан · загружаем объекты по текущему масштабу');
+  }
+  function showUnityMapPlace(id){
+    const p=unityGLPlaces.find(x=>x.id===id);if(!p)return;unityGLSelected=p;
+    unityGLMap.flyTo({center:[p.lon,p.lat],zoom:15,duration:1200});
+    const detail=document.getElementById('unity-map-detail');
+    if(detail){
+      detail.style.display='block';detail.replaceChildren();
+      const title=document.createElement('strong');title.textContent=p.name;detail.appendChild(title);
+      const category={hospital:'Больница',clinic:'Клиника',pharmacy:'Аптека',vet:'Ветеринарная клиника',dentist:'Стоматология',lab:'Лаборатория'}[p.type]||'Медицинская организация';
+      [['Категория',category],['Адрес',p.address||'Не указан'],['Телефон',p.phone||'Не указан'],['Часы работы',p.hours||'Не указаны'],['Сайт',p.website||'Не указан'],['Оператор',p.operator||'Не указан'],['Источник','OpenStreetMap']].forEach(([k,v])=>{
+        const row=document.createElement('div');row.textContent=k+': '+v;detail.appendChild(row);
+      });
+      if(p.website){const link=document.createElement('a');link.href=/^https?:\/\//i.test(p.website)?p.website:'https://'+p.website;link.target='_blank';link.rel='noopener noreferrer';link.textContent='Открыть сайт учреждения';link.style.display='inline-block';link.style.marginTop='8px';link.style.color='#65d2ff';detail.appendChild(link);}
+    }
+    new maplibregl.Popup({offset:22}).setLngLat([p.lon,p.lat]).setText(p.name+(p.address?' · '+p.address:'')).addTo(unityGLMap);
+    unityGLStatus('Выбрано: '+p.name);
+  }
+  async function searchUnityMap(queryOverride){
+    if(!unityGLMap){initUnityMap();setTimeout(()=>searchUnityMap(queryOverride),800);return;}
     const term=(queryOverride||document.getElementById('unity-map-search')?.value||'').trim();
-    const results=mapItems(term);window.renderUnityMapMarkers(results);window.renderUnityMapDirectory(results);
-    const status=document.getElementById('unity-map-status');
-    if(status)status.textContent=results.length?'Найдено в каталоге: '+results.length+'. Метки показывают города расположения учреждений.':'Совпадений нет. Попробуйте другое название.';
-    if(results.length&&map){const city=cityOf(results[0]);if(cityCoords[city])map.setView(cityCoords[city],12);}
-  };
-  window.quickUnityMapSearch=function(term){const input=document.getElementById('unity-map-search');if(input)input.value=term;window.searchUnityMap(term);};
-  window.locateUnityMap=function(){
-    const status=document.getElementById('unity-map-status');
-    if(!navigator.geolocation){if(status)status.textContent='Геолокация не поддерживается браузером.';return;}
-    if(status)status.textContent='Запрашиваем доступ к геолокации…';
+    if(!term){loadUnityMapPlaces();return;}
+    const matches=unityGLPlaces.filter(p=>(p.name+' '+p.address+' '+p.type).toLowerCase().includes(term.toLowerCase()));
+    if(matches.length){renderUnityMapMarkers(matches);renderUnityMapDirectory(matches);showUnityMapPlace(matches[0].id);return;}
+    unityGLStatus('Ищем место в Казахстане: '+term);
+    try{
+      const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&country=Kazakhstan&q='+encodeURIComponent(term));
+      const d=await r.json();
+      if(!d.length){unityGLStatus('Ничего не найдено: '+term);return;}
+      unityGLMap.flyTo({center:[Number(d[0].lon),Number(d[0].lat)],zoom:12,duration:1100});
+      unityGLStatus('Найдено место · загружаем медицинские объекты');setTimeout(loadUnityMapPlaces,1200);
+    }catch(e){unityGLStatus('Ошибка поиска. Попробуйте ещё раз.');}
+  }
+  function quickUnityMapSearch(term){const input=document.getElementById('unity-map-search');if(input)input.value=term;searchUnityMap(term);}
+  function locateUnityMap(){
+    if(!navigator.geolocation){unityGLStatus('Геолокация не поддерживается браузером');return;}
+    unityGLStatus('Запрашиваем доступ к местоположению…');
     navigator.geolocation.getCurrentPosition(pos=>{
-      const ll=[pos.coords.latitude,pos.coords.longitude];
-      if(userMarker)map.removeLayer(userMarker);
-      userMarker=L.circleMarker(ll,{radius:9,color:'#fff',weight:3,fillColor:'#e59b21',fillOpacity:1}).addTo(map).bindPopup('Вы здесь').openPopup();
-      map.setView(ll,15);if(status)status.textContent='Ваше местоположение показано на карте.';
-    },()=>{if(status)status.textContent='Не удалось получить геолокацию. Разрешите доступ в настройках браузера.';},{enableHighAccuracy:true,timeout:10000});
-  };
-  window.buildUnityRoute=function(){
-    if(!lastDestination){const status=document.getElementById('unity-map-status');if(status)status.textContent='Сначала выберите клинику из списка.';return;}
-    const origin=(document.getElementById('unity-route-origin')?.value||'').trim();
-    const destination=lastDestination.name+', '+lastDestination.city+', Казахстан';
-    const url='https://2gis.kz/search/'+encodeURIComponent(destination);
-    window.open(url,'_blank','noopener');
-    const status=document.getElementById('unity-map-status');if(status)status.textContent='Открыт поиск выбранной клиники в 2ГИС. '+(origin?'Начальная точка: '+origin+'.':'Укажите начальную точку непосредственно в 2ГИС для построения маршрута.');
-  };
-  document.addEventListener('DOMContentLoaded',()=>{if(window.L){window.initUnityMap();}});
-  document.getElementById('unity-map-search')?.addEventListener('keydown',e=>{if(e.key==='Enter')window.searchUnityMap();});
+      const ll=[pos.coords.longitude,pos.coords.latitude];
+      if(ll[0]<45.5||ll[0]>88.5||ll[1]<40||ll[1]>56.5){unityGLStatus('Вы находитесь за пределами Республики Казахстан');return;}
+      unityGLUserLocation=ll;
+      if(unityGLUserMarker)unityGLUserMarker.remove();
+      const el=document.createElement('div');el.className='unity-osiris-pin user';el.textContent='●';
+      unityGLUserMarker=new maplibregl.Marker({element:el}).setLngLat(ll).setPopup(new maplibregl.Popup().setText('Ваше местоположение')).addTo(unityGLMap);
+      unityGLMap.flyTo({center:ll,zoom:14,duration:1200});renderUnityMapDirectory();
+      const sort=document.getElementById('unity-map-sort');if(sort)sort.value='distance';
+      unityGLStatus('Местоположение определено · сортировка по расстоянию');
+    },()=>unityGLStatus('Разрешите доступ к геолокации в браузере'),{enableHighAccuracy:true,timeout:12000});
+  }
+  function clearUnityRoute(){
+    if(unityGLMap?.getLayer('unity-route-line'))unityGLMap.removeLayer('unity-route-line');
+    if(unityGLMap?.getSource('unity-route'))unityGLMap.removeSource('unity-route');
+    unityGLRouteAdded=false;unityGLStatus('Маршрут очищен');
+  }
+  async function buildUnityRoute(){
+    if(!unityGLSelected){unityGLStatus('Сначала выберите учреждение из списка');return;}
+    const originText=(document.getElementById('unity-route-origin')?.value||'').trim();
+    const routeFrom=async origin=>{
+      try{
+        unityGLStatus('Строим автомобильный маршрут…');const dest=[unityGLSelected.lon,unityGLSelected.lat];
+        const url='https://router.project-osrm.org/route/v1/driving/'+origin.join(',')+';'+dest.join(',')+'?overview=full&geometries=geojson';
+        const r=await fetch(url);const d=await r.json();if(d.code!=='Ok'||!d.routes?.length)throw new Error('No route');
+        clearUnityRoute();const route=d.routes[0];
+        unityGLMap.addSource('unity-route',{type:'geojson',data:{type:'Feature',properties:{},geometry:route.geometry}});
+        unityGLMap.addLayer({id:'unity-route-line',type:'line',source:'unity-route',layout:{'line-cap':'round','line-join':'round'},paint:{'line-color':'#22c7ff','line-width':5,'line-opacity':.9}});
+        unityGLRouteAdded=true;const km=(route.distance/1000).toFixed(1),mins=Math.round(route.duration/60);
+        const coords=route.geometry.coordinates,bounds=new maplibregl.LngLatBounds(coords[0],coords[0]);coords.forEach(c=>bounds.extend(c));
+        unityGLMap.fitBounds(bounds,{padding:75,duration:1200});unityGLStatus('Маршрут: '+km+' км · примерно '+mins+' мин · автомобиль');
+      }catch(e){unityGLStatus('Не удалось построить маршрут. Попробуйте позже.');}
+    };
+    if(originText){
+      try{const r=await fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&country=Kazakhstan&q='+encodeURIComponent(originText));const d=await r.json();if(!d.length){unityGLStatus('Не удалось найти начальную точку в Казахстане');return;}routeFrom([Number(d[0].lon),Number(d[0].lat)]);}
+      catch(e){unityGLStatus('Ошибка определения начальной точки');}
+    }else if(unityGLUserLocation)routeFrom(unityGLUserLocation);
+    else if(navigator.geolocation){navigator.geolocation.getCurrentPosition(pos=>routeFrom([pos.coords.longitude,pos.coords.latitude]),()=>unityGLStatus('Укажите адрес отправления или разрешите геолокацию'),{enableHighAccuracy:true,timeout:12000});}
+    else unityGLStatus('Укажите адрес отправления');
+  }
+  window.initUnityMap=initUnityMap;window.searchUnityMap=searchUnityMap;window.quickUnityMapSearch=quickUnityMapSearch;window.locateUnityMap=locateUnityMap;window.buildUnityRoute=buildUnityRoute;window.loadUnityMapPlaces=loadUnityMapPlaces;window.renderUnityMapMarkers=renderUnityMapMarkers;window.renderUnityMapDirectory=renderUnityMapDirectory;window.showUnityMapPlace=showUnityMapPlace;window.setUnityMapLayer=setUnityMapLayer;window.clearUnityRoute=clearUnityRoute;window.showAllKazakhstan=showAllKazakhstan;window.refreshUnityMapPlaces=refreshUnityMapPlaces;
+  document.addEventListener('DOMContentLoaded',()=>{initUnityMap();document.getElementById('unity-map-search')?.addEventListener('keydown',e=>{if(e.key==='Enter')searchUnityMap();});});
 })();
 </script>
 
@@ -4768,7 +4943,7 @@ window.unityRouteLinks=function(c,city){
     document.body.style.overflow='';
     if(updateHash) history.replaceState(null,'','#'+id);
     window.scrollTo({top:0,behavior:'smooth'});
-    if(id==='patient-route' && window.initUnityMap) setTimeout(()=>{window.initUnityMap();if(window.unityMapInstance)window.unityMapInstance.invalidateSize?.();},120);
+    if((id==='patient-route'||id==='medkz-pro-services') && window.initUnityMap) setTimeout(()=>{window.initUnityMap();window.__unityMapResize?.();},350);
     if(window.lucide)window.lucide.createIcons();
   }
   document.addEventListener('DOMContentLoaded',()=>{
@@ -4800,7 +4975,7 @@ window.unityRouteLinks=function(c,city){
   const d=new Date(date+'T00:00:00');if(Number.isNaN(d.getTime())||d<new Date(new Date().toDateString())){status.textContent='Выберите сегодняшнюю или будущую дату.';return;}
   demoBookings.push({clinic,doctor,date,time,city:document.getElementById('unity-book-city').value});
   const list=document.getElementById('unity-bookings-list');
-  list.className='';list.innerHTML=demoBookings.map((b,i)=>`<div class="unity-platform-row"><div><b>${unityEsc(b.doctor)}</b><div class="unity-platform-muted">${unityEsc(b.clinic)} · ${unityEsc(b.city)}</div></div><span class="unity-platform-tag">${unityEsc(b.date)} · ${unityEsc(b.time)}</span></div>`).join('');
+  list.className='';list.innerHTML=demoBookings.map((b,i)=>`<div class="unity-platform-row"><div><b>${b.doctor}</b><div class="unity-platform-muted">${b.clinic} · ${b.city}</div></div><span class="unity-platform-tag">${b.date} · ${b.time}</span></div>`).join('');
   document.getElementById('unity-profile-booking-count').textContent=demoBookings.length;
   status.textContent='Демо-запись добавлена только в текущую сессию. Клиника не получила заявку.';
  };
