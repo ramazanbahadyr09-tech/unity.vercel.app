@@ -1629,6 +1629,7 @@ button:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
 <div><b id="unity-map-hospital-count">—</b><span>больниц</span></div>
 <div><b id="unity-map-clinic-count">—</b><span>клиник</span></div>
 <div><b id="unity-map-vet-count">—</b><span>ветклиник</span></div>
+<div><b id="unity-map-pharmacy-count">—</b><span>аптек</span></div>
 </div>
 <div class="grid grid-cols-2 gap-2">
 <button class="unity-osiris-btn" onclick="showAllKazakhstan()" type="button">🇰🇿 Весь Казахстан</button>
@@ -5210,7 +5211,7 @@ button:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
       const satTiles='https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
       const satLabels='https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
       unityGLMap=new maplibregl.Map({
-        container:el,center:[66.9,48.0],zoom:4.7,minZoom:4,maxZoom:19,
+        container:el,center:[71.43,51.13],zoom:7.2,minZoom:4,maxZoom:19,
         maxBounds:[[45.5,40.0],[88.5,56.5]],
         fadeDuration:0,renderWorldCopies:false,
         style:{version:8,sources:{
@@ -5250,7 +5251,7 @@ button:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
   function clearUnityGLMarkers(){unityGLMarkers.forEach(m=>m.remove());unityGLMarkers=[];}
   function updateUnityMapAnalytics(list){
     const count=(type)=>list.filter(p=>p.type===type).length;
-    const values={'unity-map-total':list.length,'unity-map-hospital-count':count('hospital'),'unity-map-clinic-count':count('clinic'),'unity-map-vet-count':count('vet')};
+    const values={'unity-map-total':list.length,'unity-map-hospital-count':count('hospital'),'unity-map-clinic-count':count('clinic'),'unity-map-vet-count':count('vet'),'unity-map-pharmacy-count':count('pharmacy')};
     Object.entries(values).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.textContent=String(value);});
   }
   function unityGLVisibleList(){
@@ -5315,9 +5316,11 @@ button:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
   async function loadUnityMapPlaces(){
     if(!unityGLMap)return;
     if(unityGLLoading){unityGLQueuedReload=true;return;}
-    if(unityGLMap.getZoom()<7){
-      unityGLPlaces=[];clearUnityGLMarkers();renderUnityMapDirectory([]);
-      unityGLStatus('Приблизьте карту до города (масштаб 7+) — тогда загрузим медучреждения.');
+    if(unityGLMap.getZoom()<6.5){
+      unityGLPlaces=[];clearUnityGLMarkers();
+      ['unity-map-total','unity-map-hospital-count','unity-map-clinic-count','unity-map-vet-count','unity-map-pharmacy-count'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='—';});
+      const root=document.getElementById('unity-map-results');if(root){root.replaceChildren();const note=document.createElement('div');note.className='unity-osiris-count';note.textContent='Для точного подсчёта приблизьте карту до города. На масштабе всей страны данные не суммируются.';root.appendChild(note);}
+      unityGLStatus('Приблизьте карту до города (масштаб 6.5+) — тогда загрузим медучреждения.');
       return;
     }
     const query=unityGLQuery();
@@ -5998,5 +6001,26 @@ button:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
   document.addEventListener('DOMContentLoaded',init);
 })();
 </script><!-- UNITY ONE BUILD: unified interface and preserved legacy feature IDs. External backend activation still requires SQL deployment and live verification. -->
+<style id="unity-2-mobile-refinement">
+/* Unity 2.0: compact, accessible mobile layout without changing legacy feature IDs. */
+@media(max-width:760px){
+  #unity-map-card .unity-osiris-layout{display:flex!important;flex-direction:column!important;gap:12px!important}
+  #unity-map-card .unity-osiris-sidebar{width:100%!important;max-width:none!important;order:1!important;padding:14px!important}
+  #unity-map-card .unity-osiris-mapstage{width:100%!important;min-height:360px!important;height:52vh!important;max-height:560px!important;order:2!important;border-radius:16px!important;overflow:hidden!important}
+  #unity-map{min-height:360px!important;height:100%!important}
+  .unity-map-analytics{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
+  .unity-map-analytics>div{min-height:64px!important;padding:10px!important}
+  .unity-map-analytics b{font-size:18px!important}
+  .unity-map-analytics span{font-size:11px!important}
+  #unity-map-card .unity-osiris-maptools{display:flex!important;flex-wrap:wrap!important;gap:6px!important;max-width:calc(100% - 16px)!important}
+  #unity-map-card .unity-osiris-maptools button{font-size:11px!important;padding:8px 9px!important}
+  #unity-map-card .unity-osiris-search{width:100%!important;min-width:0!important}
+  #unity-map-card .unity-osiris-btn{min-height:44px!important;white-space:normal!important}
+  #unity-map-results{max-height:260px!important;overflow:auto!important}
+  header{position:sticky!important;top:0!important;z-index:40!important}
+  input,select,textarea,button{scroll-margin-bottom:100px}
+}
+@media(min-width:761px){#unity-map-card .unity-osiris-layout{align-items:stretch!important}}
+</style>
 </body>
 </html>
